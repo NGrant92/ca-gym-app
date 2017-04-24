@@ -1,7 +1,32 @@
 package models;
 
 /**
- * Created by User on 24/04/2017.
+ * Created by Niall on 24/04/2017.
  */
-public class Trainer {
+public class Trainer extends Person{
+
+    String speciality;
+
+    public Trainer(String speciality) {
+        this.speciality = speciality;
+    }
+
+    public String getSpeciality() {
+        return speciality;
+    }
+
+    public void setSpeciality(String speciality) {
+        this.speciality = speciality;
+    }
+
+    @Override
+    public String toString() {
+        return "Trainer{" +
+                "email='" + email + '\'' +
+                ", speciality='" + speciality + '\'' +
+                ", name='" + name + '\'' +
+                ", address='" + address + '\'' +
+                ", gender=" + gender +
+                '}';
+    }
 }

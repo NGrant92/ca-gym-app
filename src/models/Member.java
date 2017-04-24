@@ -1,7 +1,52 @@
 package models;
 
 /**
- * Created by User on 24/04/2017.
+ * Created by Niall on 24/04/2017.
  */
-public class Member {
+public abstract class Member extends Person{
+
+    double height, weight;
+    String chosenPackage;
+
+    //-------
+    //GETTERS
+    //-------
+    public double getHeight() {
+        return height;
+    }
+
+    public double getWeight() {
+        return weight;
+    }
+
+    public String getChosenPackage() {
+        return chosenPackage;
+    }
+
+    //-------
+    //SETTERS
+    //-------
+    public void setHeight(double height) {
+        this.height = height;
+    }
+
+    public void setWeight(double weight) {
+        this.weight = weight;
+    }
+
+    public void setChosenPackage(String chosenPackage) {
+        this.chosenPackage = chosenPackage;
+    }
+
+    //--------------
+    //HELPER METHODS
+    //--------------
+    @Override
+    public String toString() {
+        return "Member{" +
+                "height=" + height +
+                ", weight=" + weight +
+                ", chosenPackage='" + chosenPackage + '\'' +
+                '}';
+    }
 }
