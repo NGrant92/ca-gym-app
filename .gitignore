@@ -1,0 +1,7 @@
+.settings
+.git
+.idea
+.metadata
+out
+*.iml
+bin
