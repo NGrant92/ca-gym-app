@@ -1,10 +1,12 @@
 package utils;
 
+import models.*;
+import java.util.ArrayList;
+
 /**
  * Created by Niall on 24/04/2017.
  */
 public class Analytics {
-
 
 
     /**
@@ -12,9 +14,18 @@ public class Analytics {
      *
      * @return the BMI value for the member. The number returned is truncated to two decimal places.
      */
-    public double calculateBMI(Member member Assessment assessment){
-        double bmi = startingWeight / (height * height);
+    public double calculateBMI(Member member, Assessment assessment){
+        double bmi = member.getWeight() / (member.getHeight() * member.getHeight() );
         return toTwoDecimalPlaces(bmi);
+    }
+
+    /**
+     * A method to truncate any double to two decimal places
+     *
+     * @return end result is a double with only 2 decimal places
+     */
+    private double toTwoDecimalPlaces(double num) {
+        return(int)(num*100)/100.0;
     }
 
     /**
@@ -23,7 +34,7 @@ public class Analytics {
      * @return member height converted from meters to inches using the formula: metres x 39.37.
      *          The number returned is truncated to 2 decimal places.
      */
-    public double convertHeightMetresToInches(){
+    public double convertHeightMetresToInches(double height){
         double heightInches = height * 39.37;
         return toTwoDecimalPlaces(heightInches);
     }
@@ -33,10 +44,9 @@ public class Analytics {
      *
      * @return member weight converted from KGs to pounds. Number returned is truncated to 2 decimal places.
      */
-    public double convertWeightKGtoPounds(){
-        double weightPounds = startingWeight * 2.2;
+    public double convertWeightKGtoPounds(double weight){
+        double weightPounds = weight * 2.2;
         return toTwoDecimalPlaces(weightPounds);
-
     }
 
     /**
@@ -57,30 +67,29 @@ public class Analytics {
     public String determineBMICategory(double bmiValue)
     {
         String bmiResult;
-        double bmi = calculateBMI();
 
-        if (bmi < 15){
+        if (bmiValue < 15){
             bmiResult = "VERY SEVERELY UNDERWEIGHT";
         }
-        else if(bmi >= 15 && bmi < 16){
+        else if(bmiValue >= 15 && bmiValue < 16){
             bmiResult = "SEVERELY UNDERWEIGHT";
         }
-        else if(bmi >= 16 && bmi < 18.5){
+        else if(bmiValue >= 16 && bmiValue < 18.5){
             bmiResult = "UNDERWEIGHT";
         }
-        else if(bmi >= 18.5 && bmi < 25){
+        else if(bmiValue >= 18.5 && bmiValue < 25){
             bmiResult = "NORMAL";
         }
-        else if(bmi >= 25 && bmi < 30){
+        else if(bmiValue >= 25 && bmiValue < 30){
             bmiResult = "OVERWEIGHT";
         }
-        else if(bmi >= 30 && bmi < 35){
+        else if(bmiValue >= 30 && bmiValue < 35){
             bmiResult = "MODERATELY OBESE";
         }
-        else if(bmi >= 35 && bmi < 40){
+        else if(bmiValue >= 35 && bmiValue < 40){
             bmiResult = "SEVERELY OBESE";
         }
-        else if(bmi >= 40){
+        else if(bmiValue >= 40){
             bmiResult = "VERY SEVERELY OBESE";
         }
         else{
@@ -99,25 +108,25 @@ public class Analytics {
      */
     public boolean isIdealBodyWeight(Member member, Assessment assessment){
         //60 inches = 5ft
-        double heightInches = convertHeightMetresToInches();
+        double heightInches = convertHeightMetresToInches(member.getHeight());
         double idealWeight = 0.0;
 
         if(heightInches <= 60){
-            if(gender.equals("M")){
+            if(member.getGender().equals("M")){
                 idealWeight = 50.0;
             }
             else{
                 idealWeight = 45.5;
             }
         }
-        else if(gender.equals("M")){
+        else if(member.getGender().equals("M")){
             idealWeight = 50 + (2.3 * (heightInches-60));
         }
-        else if (gender.equals("F")){
+        else if (member.getGender().equals("F")){
             idealWeight = 45.5 + (2.3 * (heightInches-60));
         }
 
-        if(idealWeight >= (startingWeight-2) && idealWeight <= (startingWeight+2)){
+        if(idealWeight >= (member.getWeight()-2) && idealWeight <= (member.getWeight()+2)){
             return true;
         }
         else{

@@ -77,7 +77,7 @@ public abstract class Person {
         if (gender.equals("MALE") || gender.equals("FEMALE")){
             this.gender = gender.substring(0,1);
         }
-        else if (gender.length() == 1 && (gender.charAt(0)== 'M' || gender.charAt(0)== 'F')){
+        else if (gender.length() == 1 && (gender.charAt(0) == 'M' || gender.charAt(0) == 'F')){
             this.gender = gender;
         }
     }

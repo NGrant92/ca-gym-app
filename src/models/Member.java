@@ -1,17 +1,39 @@
 package models;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
 
 /**
  * Created by Niall on 24/04/2017.
  */
 public abstract class Member extends Person{
 
-    private double height, weight;
+    private double height, startingWeight;
     private String chosenPackage;
+    private HashMap<Date, Assessment> trainerAssessment;
 
-    public Member(String email, String name, String address, String gender, double height, double weight, String chosenPackage){
+    public Member(String email, String name, String address, String gender, double height, double startingWeight, String chosenPackage){
+
         super(email, name, address, gender);
-        this.height = height;
-        this.weight = weight;
+
+        trainerAssessment = new HashMap<>();
+
+        if(height >= 1.0 && height <= 3.0) {
+            this.height = height;
+        }
+        else {
+            this.height = 0;
+        }
+
+        if(startingWeight >= 35 && startingWeight <= 250)
+        {
+            this.startingWeight = startingWeight;
+        }
+        else
+        {
+            this.startingWeight = 0;
+        }
+
         this.chosenPackage = chosenPackage;
     }
 
@@ -25,7 +47,7 @@ public abstract class Member extends Person{
     }
 
     public double getWeight() {
-        return weight;
+        return startingWeight;
     }
 
     public String getChosenPackage() {
@@ -39,8 +61,8 @@ public abstract class Member extends Person{
         this.height = height;
     }
 
-    public void setWeight(double weight) {
-        this.weight = weight;
+    public void setWeight(double startingWeight) {
+        this.startingWeight = startingWeight;
     }
 
     public void setChosenPackage(String chosenPackage) {
@@ -54,7 +76,7 @@ public abstract class Member extends Person{
     public String toString() {
         return "Member{" +
                 "height=" + height +
-                ", weight=" + weight +
+                ", weight=" + startingWeight +
                 ", chosenPackage='" + chosenPackage + '\'' +
                 '}';
     }
