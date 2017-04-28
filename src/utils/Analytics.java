@@ -36,6 +36,7 @@ public class Analytics {
     public double convertWeightKGtoPounds(){
         double weightPounds = startingWeight * 2.2;
         return toTwoDecimalPlaces(weightPounds);
+
     }
 
     /**
