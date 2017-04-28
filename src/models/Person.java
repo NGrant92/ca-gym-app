@@ -5,8 +5,31 @@ package models;
  */
 public abstract class Person {
 
-    String email, name, address;
-    char gender;
+    private String email, name, address, gender;
+
+    public Person(String email, String name, String address, String gender){
+        this.email = email;
+
+        if(name.length() > 30) {
+            this.name = name.substring(0,30);
+        }
+        else{
+            this.name = name;
+        }
+
+        this.address = address;
+
+        gender = gender.toUpperCase();
+        if (gender.equals("MALE") || gender.equals("FEMALE")){
+            this.gender = gender.substring(0,1);
+        }
+        else if (gender.length() == 1 && (gender.charAt(0)== 'M' || gender.charAt(0)== 'F')){
+            this.gender = gender;
+        }
+        else{
+            this.gender = "Unspecified";
+        }
+    }
 
     //-------
     //GETTERS
@@ -23,7 +46,7 @@ public abstract class Person {
         return address;
     }
 
-    public char getGender() {
+    public String getGender() {
         return gender;
     }
 
@@ -35,15 +58,28 @@ public abstract class Person {
     }
 
     public void setName(String name) {
-        this.name = name;
+
+        if(name.length() > 30) {
+            this.name = name.substring(0,30);
+        }
+        else{
+            this.name = name;
+        }
     }
 
     public void setAddress(String address) {
         this.address = address;
     }
 
-    public void setGender(char gender) {
-        this.gender = gender;
+    public void setGender(String gender) {
+
+        gender = gender.toUpperCase();
+        if (gender.equals("MALE") || gender.equals("FEMALE")){
+            this.gender = gender.substring(0,1);
+        }
+        else if (gender.length() == 1 && (gender.charAt(0)== 'M' || gender.charAt(0)== 'F')){
+            this.gender = gender;
+        }
     }
 
     //--------------

@@ -5,10 +5,11 @@ package models;
  */
 public class StudentMember extends Member {
 
-    int studentId;
-    String collegeName;
+    private int studentId;
+    private String collegeName;
 
-    public StudentMember(int studentId, String collegeName) {
+    public StudentMember(String email, String name, String address, String gender, double height, double weight, String chosenPackage, int studentId, String collegeName) {
+        super(email, name, address, gender, height, weight, chosenPackage);
         this.studentId = studentId;
         this.collegeName = collegeName;
     }
@@ -32,15 +33,8 @@ public class StudentMember extends Member {
     @Override
     public String toString() {
         return "StudentMember{" +
-                "email='" + email + '\'' +
-                ", name='" + name + '\'' +
-                ", address='" + address + '\'' +
-                ", height=" + height +
-                ", studentId=" + studentId +
-                ", weight=" + weight +
-                ", gender=" + gender +
+                "studentId=" + studentId +
                 ", collegeName='" + collegeName + '\'' +
-                ", chosenPackage='" + chosenPackage + '\'' +
                 '}';
     }
 }

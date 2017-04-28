@@ -22,11 +22,7 @@ public class Trainer extends Person{
     @Override
     public String toString() {
         return "Trainer{" +
-                "email='" + email + '\'' +
-                ", speciality='" + speciality + '\'' +
-                ", name='" + name + '\'' +
-                ", address='" + address + '\'' +
-                ", gender=" + gender +
+                "speciality='" + speciality + '\'' +
                 '}';
     }
 }

@@ -5,8 +5,17 @@ package models;
  */
 public abstract class Member extends Person{
 
-    double height, weight;
-    String chosenPackage;
+    private double height, weight;
+    private String chosenPackage;
+
+    public Member(String email, String name, String address, String gender, double height, double weight, String chosenPackage){
+        super(email, name, address, gender);
+        this.height = height;
+        this.weight = weight;
+        this.chosenPackage = chosenPackage;
+    }
+
+
 
     //-------
     //GETTERS
