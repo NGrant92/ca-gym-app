@@ -20,6 +20,9 @@ public class GymApi {
     private ArrayList<Member> members;
     private ArrayList<Trainer> trainers;
 
+    public GymApi(){
+
+    }
 
     public String listBySpecificBMICategory(String category) {
         String listBMI = "";

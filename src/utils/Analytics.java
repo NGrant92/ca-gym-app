@@ -15,28 +15,7 @@ public class Analytics {
      * @return the BMI value for the member. The number returned is truncated to two decimal places.
      */
     public double calculateBMI(Member member, Assessment assessment){
-        double bmi = member.getWeight() / (member.getHeight() * member.getHeight() );
-        return toTwoDecimalPlaces(bmi);
-    }
-
-    /**
-     * A method to truncate any double to two decimal places
-     *
-     * @return end result is a double with only 2 decimal places
-     */
-    private double toTwoDecimalPlaces(double num) {
-        return(int)(num*100)/100.0;
-    }
-
-    /**
-     * This method returns the member height converted from metres to inches.
-     *
-     * @return member height converted from meters to inches using the formula: metres x 39.37.
-     *          The number returned is truncated to 2 decimal places.
-     */
-    public double convertHeightMetresToInches(double height){
-        double heightInches = height * 39.37;
-        return toTwoDecimalPlaces(heightInches);
+        return toTwoDecimalPlaces((member.getWeight()) / (member.getHeight() * member.getHeight()));
     }
 
     /**
@@ -132,5 +111,24 @@ public class Analytics {
         else{
             return false;
         }
+    }
+
+    /**
+     * A method to truncate any double to two decimal places
+     *
+     * @return end result is a double with only 2 decimal places
+     */
+    private double toTwoDecimalPlaces(double num) {
+        return(int)(num*100)/100.0;
+    }
+
+    /**
+     * This method returns the member height converted from metres to inches.
+     *
+     * @return member height converted from meters to inches using the formula: metres x 39.37.
+     *          The number returned is truncated to 2 decimal places.
+     */
+    public double convertHeightMetresToInches(double height){
+        return toTwoDecimalPlaces(height * 39.37);
     }
 }

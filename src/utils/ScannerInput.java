@@ -1,19 +1,21 @@
 package utils;
 
 import java.util.Scanner;
-/*This class will  retrieve inputs and insure there are no errors in the inputs f
- * for example if the player is asked how many squares it wants to move and enters a letter by mistake
- * it will return invalid option as it is not an integer
-/
+
+/**
+ * This class will retrieve inputs and ensure there are no errors in the inputs
  *
+ * Created by Niall on 24/04/2017.
  */
 
 public class ScannerInput {
-	/*
-	 * this tells the user to enter a number
-	 * if they enter a number it allows them them to the desired action
-	 */
 
+    /**
+	 * Ensures the user inputs an integer when this method is called by another method
+     * Also works around the scanner input buffer bug
+     *
+     * @param prompt a String that will be displayed when called by a method
+	 */
     public static int validNextInt(String prompt) {
         Scanner input = new Scanner(System.in);
         do {
@@ -27,11 +29,13 @@ public class ScannerInput {
         } while (true);
 
     }
-	/*This method tidies up input text
-	 * converts it to lower case and removes and spacing
-	 *this method is called in the gamecontroller
-	 */
 
+	/**
+     * Ensures the user inputs a string when this method is called by another method
+     * Also works around the scanner input buffer bug
+     *
+     * @param prompt a String that will be displayed when called by a method
+	 */
     public static String retrieveText(String prompt) {
         Scanner input = new Scanner(System.in);
         do {
