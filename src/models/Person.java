@@ -10,8 +10,8 @@ public abstract class Person {
 
     /**
      * @param email - emails are all lower case.
-     * @param name - The member's name should be no more than 30 characters. If the entered name exceeds
-     * 30 characters, the characters will be truncated and only the first 30 characters will be retained.
+     * @param name - The member's name should be no more than 30 characters. If the entered name exceed
+     *             30 characters, the characters will be truncated and only the first 30 characters will be retained.
      * @param address - There is no validation on the member's address.
      * @param gender - The member's gender i.e. can be either "M" or "F". If not specified, default
      * to "Unspecified".
