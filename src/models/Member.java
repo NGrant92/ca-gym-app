@@ -1,7 +1,9 @@
 package models;
+import java.util.*;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.SortedSet;
 
 /**
  * An abstract class that is a child of the Person class
@@ -17,6 +19,8 @@ public abstract class Member extends Person{
 
 
     /**
+     * Constructor for Member class
+     * 
      * @param height - The member's height is measured in Meters. A minimum height of one metre(inclusive)
      * is allowed and a maximum height of three metres(inclusive).
      *
@@ -39,12 +43,10 @@ public abstract class Member extends Person{
             this.height = 0;
         }
 
-        if(startingWeight >= 35 && startingWeight <= 250)
-        {
+        if(startingWeight >= 35 && startingWeight <= 250) {
             this.startingWeight = startingWeight;
         }
-        else
-        {
+        else {
             this.startingWeight = 0;
         }
 
@@ -55,8 +57,6 @@ public abstract class Member extends Person{
             this.chosenPackage = "Unspecified";
         }
     }
-
-
 
     //-------
     //GETTERS
@@ -117,6 +117,28 @@ public abstract class Member extends Person{
     //--------------
     //HELPER METHODS
     //--------------
+
+    /**
+     * Returns the latest assessment based on last entry (by calendar date).
+     * @return Returns the latest assessment based on last entry (by calendar date).
+     */
+    public Assessment latestAssessment(){
+
+
+    }
+
+    /**
+     * Returns the assessments dates sorted in date order.
+     * @return Returns the assessments dates sorted in date order.
+     */
+    public SortedSet<Date> sortedAssessmentDates(){
+
+        SortedSet test = new TreeSet();
+
+        Iterator it = test.iterator();
+    }
+
+    public abstract void chosenPackage(String packageChoice){}
 
     /**
      * Returns a human readable String interpretation of the member's details

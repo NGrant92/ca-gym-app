@@ -8,6 +8,8 @@ package models;
  */
 public abstract class Person {
 
+    private String email, name, address, gender;
+
     /**
      * @param email - emails are all lower case.
      * @param name - The member's name should be no more than 30 characters. If the entered name exceed
@@ -17,8 +19,6 @@ public abstract class Person {
      * to "Unspecified".
      *
      */
-    private String email, name, address, gender;
-
     public Person(String email, String name, String address, String gender){
 
         this.email = email.toLowerCase();

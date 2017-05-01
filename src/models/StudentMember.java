@@ -21,6 +21,13 @@ public class StudentMember extends Member {
         super(email, name, address, gender, height, startingWeight, chosenPackage);
         this.studentId = studentId;
         this.collegeName = collegeName;
+
+    }
+
+    @Override
+    public void chosenPackage(String packageChoice){
+
+        setChosenPackage(packageChoice);
     }
 
     /**

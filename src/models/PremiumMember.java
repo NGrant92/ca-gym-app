@@ -16,4 +16,10 @@ public class PremiumMember extends Member{
                          String chosenPackage, int studentId, String collegeName) {
         super(email, name, address, gender, height, startingWeight, chosenPackage);
     }
+
+    @Override
+    public void chosenPackage(String packageChoice){
+
+        setChosenPackage(packageChoice);
+    }
 }
