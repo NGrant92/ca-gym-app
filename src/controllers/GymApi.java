@@ -1,8 +1,8 @@
 package controllers;
 
 import models.*;
-import static utils.ScannerInput.*;
-import static utils.Analytics.*;
+import utils.Analytics;
+import utils.ScannerInput;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -218,6 +218,39 @@ public class GymApi {
     }
 
     /**
+     * List all the members' weight and height both imperically and metrically.
+     *
+     * @return Lists all member's weight and height listed both imperically and metrically
+     *
+     *          The format of the output is like so:
+     *              -Joe Soap:  xx kg (xxx lbs)     x.x metres  (xx inches).
+     *              -Joan Soap: xx kg (xxx lbs)     x.x metres  (xx inches).
+     *
+     *          If there are no members in the gym, then it will return a string stating so
+     */
+    public String listMemberDetailsImperialAndMetric() {
+
+        //the string to be later returned
+        String memberDetails = "";
+        //testing to make sure there are members in the members array
+        if(members.size() > 0) {
+            //for each loop to loop through the members array
+            for (Member member : members) {
+                //populating memberDetails with the member's Name, weight(kg & lbs) and height(meter & inches)
+                memberDetails += member.getName() + ":\t"
+                        + member.getWeight() + " kg ("
+                        + Analytics.convertWeightKGtoPounds(member.getWeight()) + " lbs) \t"
+                        + member.getHeight() + " metres ("
+                        + Analytics.convertHeightMetresToInches(member.getHeight()) + " inches).\n";
+            }
+            return memberDetails;
+        }
+        else {
+            return "No members in this gym bro! Drop those weights, pick up those leaflets and get out there dude!";
+        }
+    }
+
+    /**
      * Returns a string containing all members who are of an ideal body weight, based on the
      * Devine Method. If there are no members a string will be returned stating so. If no members
      * are of ideal weight it will return a string stating so.
@@ -231,7 +264,7 @@ public class GymApi {
 
         while(var2.hasNext()) {
             Member member = (Member)var2.next();
-            if(member.isIdealBodyWeight()) {
+            if(Analytics.isIdealBodyWeight(member, member.latestAssessment())) {
                 idealMember = idealMember + member.toString() + "\n";
             }
         }
@@ -245,25 +278,73 @@ public class GymApi {
         }
     }
 
+
     /**
+     * List all the members of a specific BMI category
+     *
+     * @param category - The category you wish to search members by.
+     *                  Specific Categories:
+     *                  "VERY SERVERELY UNDERWEIGHT"
+     *                  "SEVERELY UNDERWEIGHT"
+     *                  "UNDERWEIGHT"
+     *                  "NORMAL"
+     *                  "OVERWEIGHT"
+     *                  "MODERATELY OBESE"
+     *                  "SEVERELY OBESE"
+     *                  "VERY SEVERELY OBESE"
+     *
+     *            - This method also allows you to search by key words e.g: "OBESE" will return members in:
+     *                  "MODERATELY OBESE"
+     *                  "SEVERELY OBESE"
+     *                  "VERY SEVERELY OBESE"
+     *              Note: In in this situation, the members are not sorted by category, they are
+     *              just displayed as is
+     *
+     * @return List of members whose BMI falls into the category passed as a parameter.
+     *
+     *          -If there are no members in the BMI category, the message "There are no members in the
+     *          gym in this BMI category" should be returned.
+     *
+     *          -If there are no members in the gym, the message "There are no members in the gym"
+     *          should be returned.
+     */
     public String listBySpecificBMICategory(String category) {
+        //A string to be populated and returned if members are found that match the entered category
         String listBMI = "";
+        //ensures what the user enters is converted to upper case
         category = category.toUpperCase();
-        for(Member member : members){
-            if(member.determineBMICategory().contains(category)) {
-                listBMI = listBMI + member.toString() + "\n";
+        //loops through the members array to search for people who match the entered category
+        for (Member member : members) {
+            if (Analytics.determineBMICategory(Analytics.calculateBMI(member, member.latestAssessment())).contains(category)) {
+                listBMI += member.toString() + "\n";
             }
         }
-        if(members.size() == 0) {
-            return "There are no members in the gym";
+        //this message is returned if there are no members in the members array
+        if (members.size() == 0) {
+            return "No members in this gym bro! Drop those weights, pick up those leaflets and get out there dude!";
         }
-        else if(members.size() > 0 && listBMI.equals("")) {
-            return "There are no members in the gym in this BMI category";
+        //if no matches are found in a populated members array then an appropriate message is returned
+        else if (members.size() > 0 && listBMI.equals("")) {
+
+            String response;
+
+            if(category.contains("UNDERWEIGHT")){
+                response = "No toothpicks in this gym bro!";
+            }
+            else if (category.contains("OBESE")){
+                response = "In this gym obesity is extinct! Good work dude!";
+            }
+            else if (category.contains("NORMAL")){
+                response = "No body has normal BMI? Are you running a gym or a spa bro? Get back to work!";
+            }
+            else{
+                response = "No one by that category!";
+            }
+            return response;
         }
+        //if matches are found the the results are returned
         else {
             return listBMI;
         }
     }
-     */
-
 }

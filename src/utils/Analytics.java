@@ -1,6 +1,7 @@
 package utils;
 
 import models.*;
+import controllers.GymApi;
 import java.util.ArrayList;
 
 /**
@@ -14,8 +15,9 @@ public class Analytics {
      *
      * @return the BMI value for the member. The number returned is truncated to two decimal places.
      */
-    public double calculateBMI(Member member, Assessment assessment){
-        return toTwoDecimalPlaces((member.getWeight()) / (member.getHeight() * member.getHeight()));
+    public static double calculateBMI(Member member, Assessment assessment){
+        //Assessment latestAssessment = member.latestAssessment();
+        return toTwoDecimalPlaces((assessment.getWeight()) / (assessment.getHeight() * assessment.getHeight()));
     }
 
     /**
@@ -23,7 +25,7 @@ public class Analytics {
      *
      * @return member weight converted from KGs to pounds. Number returned is truncated to 2 decimal places.
      */
-    public double convertWeightKGtoPounds(double weight){
+    public static double convertWeightKGtoPounds(double weight){
         double weightPounds = weight * 2.2;
         return toTwoDecimalPlaces(weightPounds);
     }
@@ -43,7 +45,7 @@ public class Analytics {
      *
      * @return the format of a String is similar to (note the double quotes around the category): "NORMAL".
      */
-    public String determineBMICategory(double bmiValue)
+    public static String determineBMICategory(double bmiValue)
     {
         String bmiResult;
 
@@ -85,9 +87,9 @@ public class Analytics {
      *
      * @return Is the person at their ideal body weight
      */
-    public boolean isIdealBodyWeight(Member member, Assessment assessment){
+    public static boolean isIdealBodyWeight(Member member, Assessment assessment){
         //60 inches = 5ft
-        double heightInches = convertHeightMetresToInches(member.getHeight());
+        double heightInches = convertHeightMetresToInches(assessment.getHeight());
         double idealWeight = 0.0;
 
         if(heightInches <= 60){
@@ -105,7 +107,7 @@ public class Analytics {
             idealWeight = 45.5 + (2.3 * (heightInches-60));
         }
 
-        if(idealWeight >= (member.getWeight()-2) && idealWeight <= (member.getWeight()+2)){
+        if(idealWeight >= (assessment.getWeight()-2) && idealWeight <= (assessment.getWeight()+2)){
             return true;
         }
         else{
@@ -118,7 +120,7 @@ public class Analytics {
      *
      * @return end result is a double with only 2 decimal places
      */
-    private double toTwoDecimalPlaces(double num) {
+    private static double toTwoDecimalPlaces(double num) {
         return(int)(num*100)/100.0;
     }
 
@@ -128,7 +130,7 @@ public class Analytics {
      * @return member height converted from meters to inches using the formula: metres x 39.37.
      *          The number returned is truncated to 2 decimal places.
      */
-    public double convertHeightMetresToInches(double height){
+    public static double convertHeightMetresToInches(double height){
         return toTwoDecimalPlaces(height * 39.37);
     }
 }
