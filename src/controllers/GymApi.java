@@ -5,6 +5,8 @@ import utils.Analytics;
 import utils.ScannerInput;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 
 
@@ -13,12 +15,16 @@ import java.util.Iterator;
  */
 public class GymApi {
 
-    private ArrayList<Member> members = new ArrayList();
-    private ArrayList<Trainer> trainers  = new ArrayList();
+    private ArrayList<Member> members;
+    private ArrayList<Trainer> trainers;
 
     public GymApi(){
 
+        members = new ArrayList<>();
+        trainers = new ArrayList<>();
 
+
+        members.add(new PremiumMember("test1@tmail.com", "Niall", "Waterford", "M", 1.75, 66, "PREMIUM", null));
     }
 
     /**

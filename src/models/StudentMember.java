@@ -1,5 +1,6 @@
 package models;
 
+import java.util.Date;
 import java.util.HashMap;
 
 /**
@@ -17,8 +18,8 @@ public class StudentMember extends Member {
      * @param collegeName - Name of the college they attend
      */
     public StudentMember(String email, String name, String address, String gender, double height, double startingWeight,
-                         String chosenPackage, int studentId, String collegeName) {
-        super(email, name, address, gender, height, startingWeight, chosenPackage);
+                         String chosenPackage, HashMap<Date, Assessment> hashMap, int studentId, String collegeName) {
+        super(email, name, address, gender, height, startingWeight, chosenPackage, hashMap);
         this.studentId = studentId;
         this.collegeName = collegeName;
 

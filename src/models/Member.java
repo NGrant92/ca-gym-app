@@ -30,7 +30,7 @@ public abstract class Member extends Person{
      * @param chosenPackage - Currently only 2 payment packages exist, Premium and Student. If not specified
      *                      default to "Unspqecified"
      */
-    public Member(String email, String name, String address, String gender, double height, double startingWeight, String chosenPackage){
+    public Member(String email, String name, String address, String gender, double height, double startingWeight, String chosenPackage, HashMap<Date, Assessment> hashMap){
 
         super(email, name, address, gender);
 
@@ -119,11 +119,13 @@ public abstract class Member extends Person{
     //--------------
 
     /**
+    /**
      * Returns the latest assessment based on last entry (by calendar date).
      * @return Returns the latest assessment based on last entry (by calendar date).
      */
     public Assessment latestAssessment(){
 
+        return null;
 
     }
 
@@ -136,14 +138,17 @@ public abstract class Member extends Person{
         SortedSet test = new TreeSet();
 
         Iterator it = test.iterator();
+
+        return null;
     }
 
-    public abstract void chosenPackage(String packageChoice){}
+    public abstract void chosenPackage(String packageChoice);
 
     /**
      * Returns a human readable String interpretation of the member's details
      * @return A string version of the member object.
-     */
+
+    */
     @Override
     public String toString() {
         return "Member{" +

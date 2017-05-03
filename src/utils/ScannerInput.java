@@ -36,7 +36,7 @@ public class ScannerInput {
      *
      * @param prompt a String that will be displayed when called by a method
 	 */
-    public static String retrieveText(String prompt) {
+    public static String validNextString(String prompt) {
         Scanner input = new Scanner(System.in);
         do {
             System.out.println(prompt);
