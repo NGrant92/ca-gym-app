@@ -135,9 +135,8 @@ public abstract class Member extends Person{
      */
     public SortedSet<Date> sortedAssessmentDates(){
 
-        SortedSet test = new TreeSet();
+        SortedSet<Date> test = new TreeSet<>(        );
 
-        Iterator it = test.iterator();
 
         return null;
     }

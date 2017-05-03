@@ -1,6 +1,10 @@
 package controllers;
 
 import models.*;
+
+import java.util.HashMap;
+import java.util.Date;
+
 import static utils.ScannerInput.*;
 
 
@@ -47,7 +51,7 @@ public class MenuController
         System.out.println(" 2) Register");
         System.out.println(" 0) Exit");
         System.out.println("");
-        int option = validNextInt("==>>");
+        int option = validNextInt("->");
         return option;
     }
 
@@ -87,7 +91,6 @@ public class MenuController
         //A string variable that will be printed to screen depending on the person type
         String personLogin;
 
-        boolean emailSearch = false;
 
         //Empty lines to clean out the console display
         insertLines();
@@ -95,9 +98,10 @@ public class MenuController
         String personType = validNextString("Yo bro! You a Member or a Trainer? (M or T)");
         //ensuring what the entered it upper case
         personType = personType.toUpperCase();
-        /**
+
         //if they have no entered 'm' or 't' then the user will be brought back to the menu
-        if(!personType.equals("M") || !personType.equals("T")){
+        //matches.matches("[0-9]+")
+        if(!personType.equals("M") && !personType.equals("T")){
             //Telling the user they messed up
             System.out.println("Invalid option entered: " + personType +
                                 "\nReturning to Menu.");
@@ -110,7 +114,6 @@ public class MenuController
         }
         //Clears screen of previous text from above
         insertLines();
-         */
 
         System.out.println("LOGIN SCREEN:");
 
@@ -119,11 +122,11 @@ public class MenuController
 
         //If user typed M just above AND it finds their email address then it will launch the member menu
         if (personType.contains("M") && gymApi.searchMembersByEmail(personEmail) != null){
-            trainerMenu(personType);
+            memberMenu(personType, gymApi.searchMembersByEmail(personEmail));
         }
         //If user typed T just above AND it finds their email address then it will launch the trainer menu
         else if(personType.contains("T") && gymApi.searchTrainersByEmail(personEmail) != null){
-            memberMenu(personType);
+            trainerMenu(personType, gymApi.searchTrainersByEmail(personEmail));
         }
         //if neither turn out to be true the user will be returned to menu
         else {
@@ -136,39 +139,76 @@ public class MenuController
         }
     }
 
+    /**
+     * The text portion of the
+     * @param personType
+     * @return
+     */
     private int loginMenu(String personType) {
 
         String profileChoices = "";
 
-        if(personType.equals("M")){
-            profileChoices = " 1) View Profile\n" +
-                    " 2) Update Profile\n" +
-                    " 3) Progress Sub-Menu";
+        switch(personType) {
+            case "M":
+                profileChoices = " 1) View Profile\n" +
+                        " 2) Update Profile\n" +
+                        " 3) Progress Sub-Menu\n\n" +
+                        " 0) Return to Main Menu";
+                break;
+
+            case "T":
+                profileChoices = " 1) Add New Member\n" +
+                        " 2) List All Members\n" +
+                        " 3) Search For Member By Email\n" +
+                        " 4) Search For Member By Name\n" +
+                        " 5) List Members By Ideal Body Weight\n" +
+                        " 6) List Members With A Specific BMI\n" +
+                        " 7) Assessment Sub-Menu\n" +
+                        " 8) Reports Sub-Menu\n\n" +
+                        " 0) Return to Main Menu";
+                break;
+
+            case "memberProgress":
+                profileChoices = " 1) View progress by weight\n" +
+                        " 2) View progress by chest measurement\n" +
+                        " 3) View progress by thigh measurement\n" +
+                        " 4) View progress by upper arm measurement\n" +
+                        " 5) View progress by waist measurement\n" +
+                        " 6) View progress by hips measurement";
+                break;
+
+            case "trainerAssessmentMenu":
+                profileChoices = " 1) Add an assessment for a member\n" +
+                        " 2) Update comment on an assessment for a member\n";
+                break;
+
+            case "trainerReportsMenu":
+                profileChoices = " 1) Specific member progress (via email search)\n" +
+                        " 2) Specific member progress (via name search)\n" +
+                        " 3) Overall members’ report\n";
+                break;
+
+            default:
+                profileChoices = "loginMenu Switch Error";
         }
-        else if(personType.equals("T")){
-            profileChoices = " 1) Add New Member\n" +
-                    " 2) List All Members\n" +
-                    " 3) Search For Member By Email\n" +
-                    " 4) Search For Member By Name\n" +
-                    " 5) List Members By Ideal Body Weight\n" +
-                    " 6) List Members With A Specific BMI\n" +
-                    " 7) Assessment Sub-Menu\n" +
-                    " 8) Reports Sub-Menu";
-        }
+
 
         System.out.println("Enter the number for the action you wish to take:");
         System.out.println("");
         System.out.println(profileChoices);
+        System.out.println("");
+        System.out.println(" 0) Previous Menu");
         int option = validNextInt("");
         return option;
     }
 
-    private void memberMenu(String personType){
+
+    private void memberMenu(String personType, Member currMember){
         int option = loginMenu(personType);
         while(option != 0){
             switch(option){
                 case 1:
-                    //View Profile;
+                    System.out.println(currMember.toString());
                     break;
 
                 case 2:
@@ -176,7 +216,7 @@ public class MenuController
                     break;
 
                 case 3:
-                    //Progress Submenu;
+                    memberProgress(currMember);
                     break;
 
                 default:
@@ -184,27 +224,51 @@ public class MenuController
                     break;
             }
 
-            option = mainMenu();
+            option = loginMenu(personType);
         }
         //the user chose option 0, so exit the program
-        System.out.println("Exiting... bye");
-        System.exit(0);
+        //System.out.println("Exiting... bye");
+        //System.exit(0);
     }
 
-    private void trainerMenu(String personType){
+    private void trainerMenu(String personType, Trainer currTrainer){
         int option = loginMenu(personType);
         while(option != 0){
             switch(option){
                 case 1:
-                    //View Profile;
+                    addMember();
                     break;
 
                 case 2:
-                    //Update Profile;
+                    //List all Members;
                     break;
 
                 case 3:
-                    //Progress Submenu;
+                    //Search members by email;
+                    break;
+
+                case 4:
+                    //Search members by name;
+                    break;
+
+
+                case 5:
+                    //List members with ideal body weight;
+                    break;
+
+
+                case 6:
+                    // List members with a specific BMI category;
+                    break;
+
+
+                case 7:
+                    trainerAssessSubMenu(currTrainer);
+                    break;
+
+
+                case 8:
+                    trainerReportsSubMenu();
                     break;
 
                 default:
@@ -212,18 +276,122 @@ public class MenuController
                     break;
             }
 
-            option = mainMenu();
+            option = loginMenu(personType);
         }
         //the user chose option 0, so exit the program
-        System.out.println("Exiting... bye");
-        System.exit(0);
+        //System.out.println("Exiting... bye");
+        //System.exit(0);
     }
 
+    private void memberProgress(Member currMember){
+        int option = loginMenu("memberProgress");
+        while(option != 0){
+            switch(option){
+                case 1:
+                    System.out.println(currMember.latestAssessment().getWeight());
+                    break;
+
+                case 2:
+                    System.out.println(currMember.latestAssessment().getChest());
+                    break;
+
+                case 3:
+                    System.out.println(currMember.latestAssessment().getThigh());
+                    break;
+
+                case 4:
+                    System.out.println(currMember.latestAssessment().getUpperArm());
+                    break;
+
+                case 5:
+                    System.out.println(currMember.latestAssessment().getWaist());
+                    break;
+
+                case 6:
+                    System.out.println(currMember.latestAssessment().getHips());
+                    break;
+
+                default:
+                    System.out.println("Invalid option entered: " + option);
+                    break;
+            }
+
+            option = loginMenu("MS");
+        }
+        //the user chose option 0, so exit the program
+        //System.out.println("Exiting... bye");
+        //System.exit(0);
+
+    }
+
+    private void trainerAssessSubMenu(Trainer currTrainer){
+
+        int option = loginMenu("trainerAssessmentMenu");
+        while(option != 0){
+            switch(option){
+                case 1:
+                    //Add assessment for member;
+                    break;
+
+                case 2:
+                    //Update comment and assessment for member;
+                    break;
+
+                default:
+                    System.out.println("Invalid option entered: " + option);
+                    break;
+            }
+
+            option = loginMenu("trainerAssessmentMenu");
+        }
+    }
+
+    private void trainerReportsSubMenu(){
+        int option = loginMenu("trainerReportsMenu");
+        while(option != 0){
+            switch(option){
+                case 1:
+                    //Specific member progress (via email search). Note: brings the user to memberProgress()
+                    break;
+
+                case 2:
+                    //. Specific member progress (via name search). Note: brings the user to memberProgress()
+                    break;
+
+                case 3:
+                    //Overall members’ report;
+                    break;
+
+                default:
+                    System.out.println("Invalid option entered: " + option);
+                    break;
+            }
+
+            option = loginMenu("trainerReportsMenu");
+        }
+    }
+
+    private void addMember(){
+        System.out.println("Please enter the following member details: ");
+
+        String memberEmail = validNextString("Email:\n");
+        String memberName = validNextString("Name:\n");
+        String memberAddress  = validNextString("Address:\n");
+        String gender = validNextString("Address:\n");
+        double height = validNextDouble("Height(between 1 and 3 metres):\n");
+        double startingWeight = validNextDouble("Starting Weight(between 35kg and 250kg):\n");
+        String chosenPackage = "PREMIUM";
+        HashMap<Date, Assessment> hashMap = null;
+
+
+        gymApi.addMember(new PremiumMember(memberEmail, memberName, memberAddress, gender, height, startingWeight, chosenPackage, hashMap));
+
+    }
     /**
      * Prints out blank lines to stop a player reading the previous turn
      */
     private void insertLines() {
-        for (int clear = 0; clear < 15; clear++) {
+        for (int clear = 0; clear < 25; clear++) {
             System.out.println("\n");
         }
     }

@@ -8,7 +8,7 @@ import utils.*;
  */
 public class Assessment {
 
-    private double weight, height, thigh, upperArm, waist, hips;
+    private double weight, chest, thigh, upperArm, waist, hips;
     String comment;
     private Trainer trainer;
 
@@ -16,7 +16,6 @@ public class Assessment {
      * Constructor method for the Assessment class
      *
      * @param weight - Member's weight as a double
-     * @param height - Member's height as a double
      * @param thigh - Member's thigh length as a double
      * @param upperArm - Member's upper arm length as a double
      * @param waist - Member's waist size as a double
@@ -24,11 +23,11 @@ public class Assessment {
      * @param comment - A comment from the trainer on the member's progress
      * @param trainer - The trainer who made the comment
      */
-    public Assessment(double weight, double height, double thigh, double upperArm, double waist, double hips,
+    public Assessment(double weight, double chest, double thigh, double upperArm, double waist, double hips,
                       String comment, Trainer trainer){
 
         this.weight = weight;
-        this.height = height;
+        this.chest = chest;
         this.thigh = thigh;
         this.upperArm = upperArm;
         this.waist = waist;
@@ -50,11 +49,11 @@ public class Assessment {
     }
 
     /**
-     * Returns the member's height in meters
-     * @return The member's height in meters
+     * Returns the member's chest in cm
+     * @return The member's chest in cm
      */
-    public double getHeight() {
-        return height;
+    public double getChest() {
+        return chest;
     }
 
     /**
@@ -119,11 +118,11 @@ public class Assessment {
     }
 
     /**
-     * Updates the member's height
-     * @param height Updates the the member's height
+     * Updates the member's chest
+     * @param chest Updates the the member's chest
      */
-    public void setHeight(double height) {
-        this.height = height;
+    public void setChest(double chest) {
+        this.chest = chest;
     }
 
     /**
@@ -187,7 +186,6 @@ public class Assessment {
     public String toString() {
         return "Assessment{" +
                 "weight=" + weight +
-                ", height=" + height +
                 ", thigh=" + thigh +
                 ", upperArm=" + upperArm +
                 ", waist=" + waist +

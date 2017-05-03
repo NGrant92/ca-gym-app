@@ -17,7 +17,7 @@ public class Analytics {
      */
     public static double calculateBMI(Member member, Assessment assessment){
         //Assessment latestAssessment = member.latestAssessment();
-        return toTwoDecimalPlaces((assessment.getWeight()) / (assessment.getHeight() * assessment.getHeight()));
+        return toTwoDecimalPlaces((assessment.getWeight()) / (member.getHeight() * member.getHeight()));
     }
 
     /**
@@ -89,7 +89,7 @@ public class Analytics {
      */
     public static boolean isIdealBodyWeight(Member member, Assessment assessment){
         //60 inches = 5ft
-        double heightInches = convertHeightMetresToInches(assessment.getHeight());
+        double heightInches = convertHeightMetresToInches(member.getHeight());
         double idealWeight = 0.0;
 
         if(heightInches <= 60){

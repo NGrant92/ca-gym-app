@@ -86,7 +86,7 @@ public class GymApi {
      * @return A boolean to determine if the index is valid
      */
     public boolean isValidMemberIndex(int index){
-        if(index > (members.size() - 1)){
+        if(index < (members.size())){
             return true;
         }
         else{
@@ -101,7 +101,7 @@ public class GymApi {
      * @return A boolean to determine if the index is valid
      */
     public boolean isValidTrainerIndex(int index){
-        if(index > (trainers.size() - 1)){
+        if(index < (trainers.size())){
             return true;
         }
         else{
