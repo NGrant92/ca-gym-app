@@ -95,6 +95,7 @@ public class MenuController
         String personType = validNextString("Yo bro! You a Member or a Trainer? (M or T)");
         //ensuring what the entered it upper case
         personType = personType.toUpperCase();
+        /**
         //if they have no entered 'm' or 't' then the user will be brought back to the menu
         if(!personType.equals("M") || !personType.equals("T")){
             //Telling the user they messed up
@@ -109,28 +110,29 @@ public class MenuController
         }
         //Clears screen of previous text from above
         insertLines();
+         */
 
         System.out.println("LOGIN SCREEN:");
 
         //asking for users email
         String personEmail = validNextString("Enter Your Email:");
 
-        if (personType.contains("M")){
-            emailSearch = gymApi.searchMembersByEmail(personEmail) != null;
+        //If user typed M just above AND it finds their email address then it will launch the member menu
+        if (personType.contains("M") && gymApi.searchMembersByEmail(personEmail) != null){
+            trainerMenu(personType);
         }
-        else if(personType.contains("T")){
-            emailSearch = gymApi.searchTrainersByEmail(personEmail) != null;
+        //If user typed T just above AND it finds their email address then it will launch the trainer menu
+        else if(personType.contains("T") && gymApi.searchTrainersByEmail(personEmail) != null){
+            memberMenu(personType);
         }
-
-        if(emailSearch){
-            loginMenu(personType);
-        }
+        //if neither turn out to be true the user will be returned to menu
         else {
             System.out.println("Invalid Email entered: " + personEmail +
                     "\nReturning to Menu.");
+            //Program is paused for 3.5 seconds to allow reading time
             sleep(3500);
+            //Clears screen of previous text from above
             insertLines();
-            return;
         }
     }
 
@@ -161,16 +163,20 @@ public class MenuController
         return option;
     }
 
-    private void memberMenu(){
-        int option = mainMenu();
+    private void memberMenu(String personType){
+        int option = loginMenu(personType);
         while(option != 0){
             switch(option){
                 case 1:
-                    login();
+                    //View Profile;
                     break;
 
                 case 2:
-                    ;
+                    //Update Profile;
+                    break;
+
+                case 3:
+                    //Progress Submenu;
                     break;
 
                 default:
@@ -183,11 +189,34 @@ public class MenuController
         //the user chose option 0, so exit the program
         System.out.println("Exiting... bye");
         System.exit(0);
-
     }
 
-    private void trainerMenu(){
+    private void trainerMenu(String personType){
+        int option = loginMenu(personType);
+        while(option != 0){
+            switch(option){
+                case 1:
+                    //View Profile;
+                    break;
 
+                case 2:
+                    //Update Profile;
+                    break;
+
+                case 3:
+                    //Progress Submenu;
+                    break;
+
+                default:
+                    System.out.println("Invalid option entered: " + option);
+                    break;
+            }
+
+            option = mainMenu();
+        }
+        //the user chose option 0, so exit the program
+        System.out.println("Exiting... bye");
+        System.exit(0);
     }
 
     /**
