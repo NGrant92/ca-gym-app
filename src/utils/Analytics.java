@@ -16,7 +16,6 @@ public class Analytics {
      * @return the BMI value for the member. The number returned is truncated to two decimal places.
      */
     public static double calculateBMI(Member member, Assessment assessment){
-        //Assessment latestAssessment = member.latestAssessment();
         return toTwoDecimalPlaces((assessment.getWeight()) / (member.getHeight() * member.getHeight()));
     }
 

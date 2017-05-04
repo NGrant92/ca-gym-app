@@ -25,6 +25,7 @@ public class GymApi {
 
 
         members.add(new PremiumMember("test1@tmail.com", "Niall", "Waterford", "M", 1.75, 66, "PREMIUM", null));
+        trainers.add(new Trainer("test2@tmail.com", "NDog", "Waterford", "M", "Skipping leg day"));
     }
 
     /**

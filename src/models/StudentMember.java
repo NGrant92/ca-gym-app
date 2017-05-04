@@ -71,7 +71,15 @@ public class StudentMember extends Member {
     public String toString() {
         return "StudentMember{" +
                 "studentId=" + studentId +
+                ", email='" + getEmail() + '\'' +
+                ", name='" + getName() + '\'' +
                 ", collegeName='" + collegeName + '\'' +
+                ", address='" + getAddress() + '\'' +
+                ", gender='" + getGender() + '\'' +
+                ", height=" + getHeight() +
+                ", startingWeight=" + getWeight() +
+                ", chosenPackage='" + getChosenPackage() + '\'' +
+                ", trainerAssessment=" + latestAssessment() +
                 '}';
     }
 }

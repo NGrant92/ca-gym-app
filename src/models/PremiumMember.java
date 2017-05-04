@@ -23,4 +23,22 @@ public class PremiumMember extends Member{
 
         setChosenPackage(packageChoice);
     }
+
+    /**
+     * Returns a human readable String interpretation of the member's details
+     * @return A string version of the premium member object.
+     */
+    @Override
+    public String toString() {
+        return "PremiumMember{" +
+                "email='" + getEmail() + '\'' +
+                ", name='" + getName() + '\'' +
+                ", address='" + getAddress() + '\'' +
+                ", gender='" + getGender() + '\'' +
+                ", height=" + getHeight() +
+                ", startingWeight=" + getWeight() +
+                ", chosenPackage='" + getChosenPackage() + '\'' +
+                ", trainerAssessment=" + latestAssessment() +
+                '}';
+    }
 }
