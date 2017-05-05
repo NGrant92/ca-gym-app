@@ -33,8 +33,7 @@ public class MenuController
      *
      * @return The users menu choice
      */
-    private int mainMenu() {
-
+    private String mainMenu() {
 
         System.out.println("\t+ = = = = = = = = = = = = = = = = = = = +");
         System.out.println("\t||                                     ||");
@@ -47,25 +46,30 @@ public class MenuController
         System.out.println("\t+ = = = = = = = = = = = = = = = = = = = +");
         System.out.println("Enter the number for the action you wish to take:");
         System.out.println("");
-        System.out.println(" 1) Login");
-        System.out.println(" 2) Register");
-        System.out.println(" 0) Exit");
+        System.out.println(" l) Login");
+        System.out.println(" r) Register");
+        System.out.println(" a) Assessment");
+        System.out.println(" exit) Exit");
         System.out.println("");
-        int option = validNextInt("> ");
-        return option;
+        String option = validNextString("> ");
+        return option.toLowerCase();
     }
 
     //This is the method that controls the loop
     private void runMenu(){
-        int option = mainMenu();
-        while(option != 0){
+        String option = mainMenu();
+        while(option != "exit"){
             switch(option){
-                case 1:
+                case "l":
                     login();
                     break;
 
-                case 2:
+                case "r":
                     addMember();
+                    break;
+
+                case "a":
+                    addAssessment(gymApi.getTrainers().get(0), gymApi.getMembers().get(0));
                     break;
 
                 default:
@@ -152,8 +156,9 @@ public class MenuController
      * @return returns the option entered by the user
      */
     private int loginMenu(String menuType) {
+        insertLines();
 
-        String profileChoices = "";
+        String profileChoices;
 
         switch(menuType) {
             case "M":
@@ -186,7 +191,7 @@ public class MenuController
                 break;
 
             case "trainerAssessmentMenu":
-                profileChoices = " 1) Add an assessment for a member - NOT FIN -\n" +
+                profileChoices = " 1) Add an assessment for a member\n" +
                         " 2) Update comment on an assessment for a member - NOT FIN -\n\n" +
                         " 0) Return to Previous Menu";
                 break;
@@ -201,7 +206,6 @@ public class MenuController
             default:
                 profileChoices = "loginMenu Switch Error";
         }
-
 
         System.out.println("Enter the number for the action you wish to take:");
         System.out.println("");
@@ -235,9 +239,6 @@ public class MenuController
 
             option = loginMenu(personType);
         }
-        //the user chose option 0, so exit the program
-        //System.out.println("Exiting... bye");
-        //System.exit(0);
     }
 
     private void trainerMenu(String personType, Trainer currTrainer){
@@ -287,9 +288,6 @@ public class MenuController
 
             option = loginMenu(personType);
         }
-        //the user chose option 0, so exit the program
-        //System.out.println("Exiting... bye");
-        //System.exit(0);
     }
 
     /**
@@ -336,20 +334,24 @@ public class MenuController
                     break;
             }
 
-            option = loginMenu("MS");
+            option = loginMenu("memberProgress");
         }
         //the user chose option 0, so exit the program
         //System.out.println("Exiting... bye");
         //System.exit(0);
     }
 
+    private Member searchMember(){
+        System.out.println("Enter the email of the member you wish to assess.");
+        String addAssessmentSearch = validNextString("\nEmail: ");
+        return gymApi.searchMembersByEmail(addAssessmentSearch);
+    }
+
     /**
      * A submenu that is for the trainer only. Allows them to
      * add assessments or allows the trainer to update assessments
      * @param currTrainer trainer currently logged in
-     *
      */
-    //TODO add member object - maybe in the methods to be called
     private void trainerAssessSubMenu(Trainer currTrainer){
 
         int option = loginMenu("trainerAssessmentMenu");
@@ -357,10 +359,36 @@ public class MenuController
             switch(option){
                 case 1:
                     //Add assessment for member;
+                    Member foundMem = searchMember();
+                    if( foundMem != null){
+                        addAssessment(currTrainer, foundMem);
+                    }
+                    else{
+                        System.out.println("Invalid Email: " + foundMem);
+                    }
                     break;
 
                 case 2:
                     //Update comment and assessment for member;
+                    System.out.println("Enter the email of the member you wish to update");
+                    String updateAssessmentSearch = validNextString("\nEmail: ");
+                    Member memSearch = gymApi.searchMembersByEmail(updateAssessmentSearch);
+                    if(memSearch != null){
+                        String updateComment = validNextString("Enter new comment:\n> ");
+                        memSearch.latestAssessment().setComment(updateComment);
+                        if(memSearch.latestAssessment().getComment().equals(updateComment)){
+                            System.out.println("Update Successful!");
+                            sleep(2000);
+                            insertLines();
+                        }
+                        else{
+                            System.out.println("Update Comment Error");
+                            sleep(3500);
+                        }
+                    }
+                    else{
+                        System.out.println("Invalid Email: " + updateAssessmentSearch);
+                    }
                     break;
 
                 default:
@@ -398,8 +426,22 @@ public class MenuController
                     break;
 
                 case 2:
+                    /**
                     //. Specific member progress (via name search). Note: brings the user to memberProgress()
+                    //Specific member progress (via email search). Note: brings the user to memberProgress()
+                    String memName = validNextString("Member's Name:\n> ");
+                    //Storing the searchMembersByEmail() results into a member variable
+                    Member memSearch = gymApi.searchMembersByName(memName);
+                    //testing to see if searchMembersByEmail returned a valid member
+                    //if so then it will call the memberProgress() method
+                    if(memSearch != null){
+                        memberProgress(memSearch);
+                    }
+                    else{
+                        System.out.println("Invalid Name: " + memEmail);
+                    }
                     break;
+                     */
 
                 case 3:
                     //Overall members’ report;
@@ -414,27 +456,77 @@ public class MenuController
         }
     }
 
+    private void addAssessment(Trainer currTrainer, Member currMember){
+
+        double weight;
+
+        insertLines();
+        System.out.println("MEMBER:\n" + currMember.toString());
+
+        System.out.println("\n\nNEW ASSESSMENT:");
+        //ensures what is entered for the weight category is between 35 and 250
+        //should non-numerical numbers be entered it will be caught by the validNextDouble() method
+        while(true) {
+            weight = validNextDouble("Weight(between 35kg and 250kg):\n> ");
+
+            //checking to see if the entered height is between 35kg and 65kg
+            //if so then it will continue onto the next stage
+            if(weight == 0){
+                return;
+            }
+            else if(weight >= 35 && weight <= 250) {
+                break;
+            }
+            //if what is entered is not between 1.0-3.0 then it will return this prompt before
+            //returning to the start of the loop
+            else {
+                System.out.println("\nInvalid option entered: " + weight);
+                System.out.println("Please ensure weight is between 35-250kg.\n");
+            }
+        }
+
+        double chest = validNextDouble("Chest:\n> ");
+        double thigh = validNextDouble("Thigh:\n> ");
+        double upperArm = validNextDouble("Upper Arm:\n> ");
+        double waist = validNextDouble("Waist:\n> ");
+        double hips = validNextDouble("Hips:\n> ");
+        String comment = validNextString("Trainer's Comment:\n> ");
+
+
+        currMember.addAssessment(new Assessment(weight, chest, thigh, upperArm, waist, hips, comment, currTrainer));
+        if(currMember.latestAssessment().equals(comment)){
+            System.out.println("Assessment Successfully Added.\nReturning to menu...");
+            sleep(3500);
+            insertLines();
+        }
+        else{
+            System.out.println("add Assessment Error");
+            sleep(3500);
+        }
+    }
+
+    private void updateAssessment(Trainer currTrainer, Member currMember){
+
+        insertLines();
+        System.out.println("MEMBER:\n" + currMember.toString());
+        System.out.println("\n\nUPDATE ASSESSMENT:");
+
+
+    }
+
     /**
      * A method that when called will ask the user to input various details
      * which will be used to create a new Member object
      *
      */
-    //TODO hashmap stuff
     private void addMember() {
+        insertLines();
         System.out.println("Please enter the following member details: ");
         System.out.println("(Type 'EXIT' to return to previous menu)");
 
-        String memberEmail = "";
-        String memberName = "";
-        String memberAddress = "";
-        String gender = "";
-        double height = 0;
-        double startingWeight = 0;
-        String chosenPackage = "";
-        HashMap<Date, Assessment> hashMap = null;
-
-        int memberStudentID = 0;
-        String memberCollege = "";
+        String memberEmail, memberName, memberAddress, gender, chosenPackage, memberCollege;
+        double height, startingWeight;
+        int memberStudentID;
 
         //the while loop ensures that the user inputs the correct information
         while (true) {
@@ -549,7 +641,7 @@ public class MenuController
             }
         }
 
-        //ensures what is entered for the weight category is between 1.0 and 3.0
+        //ensures what is entered for the weight category is between 35 and 250
         //should non-numerical numbers be entered it will be caught by the validNextDouble() method
         while(true) {
             startingWeight = validNextDouble("Starting Weight(between 35kg and 250kg):\n");
@@ -658,7 +750,7 @@ public class MenuController
 
             //a student member object is now created and entered into the members array
             gymApi.addMember(new StudentMember(memberEmail, memberName, memberAddress, gender, height,
-                    startingWeight, chosenPackage, hashMap, memberStudentID, memberCollege));
+                    startingWeight, chosenPackage, memberStudentID, memberCollege));
 
             //this gets the name from the most recently entered member and says that it was added successfully
             //this is done so that if the wrong name appears this will help indicate an error
@@ -672,7 +764,7 @@ public class MenuController
         else if (chosenPackage.contains("PREMIUM")){
             //a premium member object is added to the members array
             gymApi.addMember(new PremiumMember(memberEmail, memberName, memberAddress, gender, height,
-                    startingWeight, chosenPackage, hashMap));
+                    startingWeight, chosenPackage));
 
             //this gets the name from the most recently entered member and says that it was added successfully
             //this is done so that if the wrong name appears this will help indicate an error

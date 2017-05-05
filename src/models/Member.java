@@ -1,6 +1,10 @@
 package models;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.SortedSet;
@@ -15,7 +19,7 @@ public abstract class Member extends Person{
 
     private double height, startingWeight;
     private String chosenPackage;
-    private HashMap<Date, Assessment> trainerAssessment;
+    private HashMap<Date, Assessment> trainerAssessment = new HashMap<>();
 
 
     /**
@@ -30,11 +34,10 @@ public abstract class Member extends Person{
      * @param chosenPackage - Currently only 2 payment packages exist, Premium and Student. If not specified
      *                      default to "Unspqecified"
      */
-    public Member(String email, String name, String address, String gender, double height, double startingWeight, String chosenPackage, HashMap<Date, Assessment> hashMap){
+    public Member(String email, String name, String address, String gender, double height, double startingWeight, String chosenPackage){
 
         super(email, name, address, gender);
 
-        trainerAssessment = new HashMap<>();
 
         if(height >= 1.0 && height <= 3.0) {
             this.height = height;
@@ -118,14 +121,19 @@ public abstract class Member extends Person{
     //HELPER METHODS
     //--------------
 
-    /**
+
+    public void addAssessment(Assessment newAssessment){
+
+        trainerAssessment.put(new Date(), newAssessment);
+    }
+
     /**
      * Returns the latest assessment based on last entry (by calendar date).
      * @return Returns the latest assessment based on last entry (by calendar date).
      */
     public Assessment latestAssessment(){
 
-        return null;
+        return trainerAssessment.get(sortedAssessmentDates().last());
 
     }
 
@@ -135,10 +143,8 @@ public abstract class Member extends Person{
      */
     public SortedSet<Date> sortedAssessmentDates(){
 
-        SortedSet<Date> test = new TreeSet<>(        );
-
-
-        return null;
+        SortedSet<Date> sortedDates = new TreeSet<>(trainerAssessment.keySet());
+        return sortedDates;
     }
 
     public abstract void chosenPackage(String packageChoice);

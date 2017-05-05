@@ -15,8 +15,8 @@ import java.util.Iterator;
  */
 public class GymApi {
 
-    private ArrayList<Member> members;
-    private ArrayList<Trainer> trainers;
+    public ArrayList<Member> members;
+    public ArrayList<Trainer> trainers;
 
     public GymApi(){
 
@@ -24,8 +24,19 @@ public class GymApi {
         trainers = new ArrayList<>();
 
 
-        members.add(new PremiumMember("test1@tmail.com", "Niall", "Waterford", "M", 1.75, 66, "PREMIUM", null));
+        members.add(new PremiumMember("test1@tmail.com", "Niall", "Waterford", "M", 1.75, 66, "PREMIUM"));
         trainers.add(new Trainer("test2@tmail.com", "NDog", "Waterford", "M", "Skipping leg day"));
+
+        addAssessment(0);
+
+    }
+
+
+    public void addAssessment(int i){
+        Assessment test = new Assessment(66, 55, 34, 15, 24, 10, "Keep up the good work", trainers.get(i));
+        members.get(i).addAssessment(test);
+        Assessment test2 = new Assessment(77, 55, 34, 15, 24, 10, "Keep up the good work", trainers.get(i));
+        members.get(i).addAssessment(test2);
     }
 
     /**

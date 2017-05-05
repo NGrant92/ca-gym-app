@@ -184,14 +184,14 @@ public class Assessment {
      */
     @Override
     public String toString() {
-        return "Assessment{" +
-                "weight=" + weight +
-                ", thigh=" + thigh +
-                ", upperArm=" + upperArm +
-                ", waist=" + waist +
-                ", hips=" + hips +
-                ", comment='" + comment + '\'' +
-                ", trainer=" + trainer +
-                '}';
+        return
+                "WEIGHT........." + weight + "\n" +
+                "CHEST.........." + chest + "\n" +
+                "THIGH.........." + thigh + "\n" +
+                "UPPER ARM......" + upperArm + "\n" +
+                "WAIST.........." + waist + "\n" +
+                "HIPS..........." + hips + "\n" +
+                "COMMENT........" + comment + "\n" +
+                "TRAINER........" + trainer.getName() + "\n";
     }
 }

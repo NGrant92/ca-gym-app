@@ -18,8 +18,8 @@ public class StudentMember extends Member {
      * @param collegeName - Name of the college they attend
      */
     public StudentMember(String email, String name, String address, String gender, double height, double startingWeight,
-                         String chosenPackage, HashMap<Date, Assessment> hashMap, int studentId, String collegeName) {
-        super(email, name, address, gender, height, startingWeight, chosenPackage, hashMap);
+                         String chosenPackage, int studentId, String collegeName) {
+        super(email, name, address, gender, height, startingWeight, chosenPackage);
         this.studentId = studentId;
         this.collegeName = collegeName;
 
@@ -69,17 +69,13 @@ public class StudentMember extends Member {
      */
     @Override
     public String toString() {
-        return "StudentMember{" +
-                "studentId=" + studentId +
-                ", email='" + getEmail() + '\'' +
-                ", name='" + getName() + '\'' +
-                ", collegeName='" + collegeName + '\'' +
-                ", address='" + getAddress() + '\'' +
-                ", gender='" + getGender() + '\'' +
-                ", height=" + getHeight() +
-                ", startingWeight=" + getWeight() +
-                ", chosenPackage='" + getChosenPackage() + '\'' +
-                ", trainerAssessment=" + latestAssessment() +
-                '}';
+        return  "NAME..........." + getName() + "\n" +
+                "EMAIL.........." + getEmail() + "\n" +
+                "STUDENT ID....." + getStudentId() + "\n" +
+                "COLLEGE........" + getCollegeName() + "\n" +
+                "GENDER........." + getGender() + "\n" +
+                "HEIGHT........." + getHeight() + "\n" +
+                "START WEIGHT..." + getWeight() + "\n\n" +
+                "LATEST ASSESSMENT:" + "\n" + latestAssessment();
     }
 }

@@ -60,7 +60,7 @@ public class ScannerInput {
         Scanner input = new Scanner(System.in);
         do {
             System.out.print(prompt);
-            return input.nextLine().trim().toLowerCase();
+            return input.nextLine().trim();
         } while (true);
     }
 }

@@ -14,8 +14,8 @@ public class PremiumMember extends Member{
      * Constructor for PremiumMember class
      */
     public PremiumMember(String email, String name, String address, String gender, double height, double startingWeight,
-                         String chosenPackage, HashMap<Date, Assessment> hashMap) {
-        super(email, name, address, gender, height, startingWeight, chosenPackage, hashMap);
+                         String chosenPackage) {
+        super(email, name, address, gender, height, startingWeight, chosenPackage);
     }
 
     @Override
@@ -30,15 +30,11 @@ public class PremiumMember extends Member{
      */
     @Override
     public String toString() {
-        return "PremiumMember{" +
-                "email='" + getEmail() + '\'' +
-                ", name='" + getName() + '\'' +
-                ", address='" + getAddress() + '\'' +
-                ", gender='" + getGender() + '\'' +
-                ", height=" + getHeight() +
-                ", startingWeight=" + getWeight() +
-                ", chosenPackage='" + getChosenPackage() + '\'' +
-                ", trainerAssessment=" + latestAssessment() +
-                '}';
+        return  "NAME..........." + getName() + "\n" +
+                "EMAIL.........." + getEmail() + "\n" +
+                "GENDER........." + getGender() + "\n" +
+                "HEIGHT........." + getHeight() + "\n" +
+                "START WEIGHT..." + getWeight() + "\n\n" +
+                "LATEST ASSESSMENT:" + "\n" + latestAssessment();
     }
 }
