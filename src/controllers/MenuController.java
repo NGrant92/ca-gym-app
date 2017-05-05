@@ -1,10 +1,6 @@
 package controllers;
 
 import models.*;
-
-import java.util.HashMap;
-import java.util.Date;
-
 import static utils.ScannerInput.*;
 
 
@@ -61,10 +57,12 @@ public class MenuController
         while(option != "exit"){
             switch(option){
                 case "l":
+                    //brings the user to the log in menu
                     login();
                     break;
 
                 case "r":
+                    //allows a new person to be registered
                     addMember();
                     break;
 
@@ -104,7 +102,6 @@ public class MenuController
         personType = personType.toUpperCase();
 
         //if they have no entered 'm' or 't' then the user will be brought back to the menu
-        //matches.matches("[0-9]+")
         if(!personType.equals("M") && !personType.equals("T")){
             //Telling the user they messed up
             System.out.println("Invalid option entered: " + personType +
@@ -156,10 +153,12 @@ public class MenuController
      * @return returns the option entered by the user
      */
     private int loginMenu(String menuType) {
+        //Clears the console of any previous text
         insertLines();
 
         String profileChoices;
-
+        //Each menu will request a specific string to be displayed to the user
+        //The menu when it calls loginMenu() will specify what string will be stored in profileChoices
         switch(menuType) {
             case "M":
                 profileChoices = " 1) View Profile\n" +
@@ -216,11 +215,17 @@ public class MenuController
     }
 
 
+    /**
+     * The main menu for when a member logs with their email
+     * @param personType This is used to let the loginMenu() method know what to display to screen
+     * @param currMember The member who just logged in
+     */
     private void memberMenu(String personType, Member currMember){
         int option = loginMenu(personType);
         while(option != 0){
             switch(option){
                 case 1:
+                    //View Profile
                     System.out.println(currMember.toString());
                     break;
 
@@ -229,6 +234,7 @@ public class MenuController
                     break;
 
                 case 3:
+                    //Progress Menu that will let them see their current measurements
                     memberProgress(currMember);
                     break;
 
@@ -241,15 +247,22 @@ public class MenuController
         }
     }
 
+    /**
+     * The main menu for when a trainer logs in with their email
+     * @param personType This is used to let the loginMenu() method know what to display to screen
+     * @param currTrainer The trainer who just logged in
+     */
     private void trainerMenu(String personType, Trainer currTrainer){
         int option = loginMenu(personType);
         while(option != 0){
             switch(option){
                 case 1:
+                    //Adds a member to the members array
                     addMember();
                     break;
 
                 case 2:
+                    //Lists out all the registered members
                     System.out.println(gymApi.listMembers());
                     break;
 
@@ -273,11 +286,13 @@ public class MenuController
 
 
                 case 7:
+                    //A menu where the trainer can add or update new assessments
                     trainerAssessSubMenu(currTrainer);
                     break;
 
 
                 case 8:
+                    //allows trainer to view reports on the members
                     trainerReportsSubMenu();
                     break;
 
@@ -336,9 +351,6 @@ public class MenuController
 
             option = loginMenu("memberProgress");
         }
-        //the user chose option 0, so exit the program
-        //System.out.println("Exiting... bye");
-        //System.exit(0);
     }
 
     /**
@@ -422,8 +434,7 @@ public class MenuController
 
                 case 2:
                     /**
-                    //. Specific member progress (via name search). Note: brings the user to memberProgress()
-                    //Specific member progress (via email search). Note: brings the user to memberProgress()
+                    //Specific member progress (via name search). Note: brings the user to memberProgress()
                     String memName = validNextString("Member's Name:\n> ");
                     //Storing the searchMembersByEmail() results into a member variable
                     Member memSearch = gymApi.searchMembersByName(memName);
@@ -488,6 +499,7 @@ public class MenuController
         }
 
         //new measurements are stored in these variables along with the trainer's comment
+        //No validation was specified for these measurements
         double chest = validNextDouble("\nChest:\n> ");
         double thigh = validNextDouble("\nThigh:\n> ");
         double upperArm = validNextDouble("\nUpper Arm:\n> ");
