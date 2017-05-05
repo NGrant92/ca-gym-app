@@ -341,12 +341,6 @@ public class MenuController
         //System.exit(0);
     }
 
-    private Member searchMember(){
-        System.out.println("Enter the email of the member you wish to assess.");
-        String addAssessmentSearch = validNextString("\nEmail: ");
-        return gymApi.searchMembersByEmail(addAssessmentSearch);
-    }
-
     /**
      * A submenu that is for the trainer only. Allows them to
      * add assessments or allows the trainer to update assessments
@@ -358,34 +352,36 @@ public class MenuController
         while(option != 0){
             switch(option){
                 case 1:
-                    //Add assessment for member;
-                    Member foundMem = searchMember();
+                    //Add assessment for member
+                    //asks user to enter an email to be used to searched for
+                    System.out.println("Enter the email of the member you wish to assess.");
+                    //user input is stored to be searched
+                    String addAssessmentSearch = validNextString("\nEmail: ");
+                    //email is searched for and if a member object is found it is stored in the foundMem variable
+                    Member foundMem = gymApi.searchMembersByEmail(addAssessmentSearch);
+                    //if memSearch is not null the addAssessment() method will be run
                     if( foundMem != null){
                         addAssessment(currTrainer, foundMem);
                     }
+                    //If no matching email is found then the user is told so
                     else{
-                        System.out.println("Invalid Email: " + foundMem);
+                        System.out.println("Invalid Email: " + addAssessmentSearch);
                     }
                     break;
 
                 case 2:
-                    //Update comment and assessment for member;
+                    //Update comment on an assessment for member
+                    //asks user to enter an email to be used to searched for
                     System.out.println("Enter the email of the member you wish to update");
+                    //user input is stored to be searched
                     String updateAssessmentSearch = validNextString("\nEmail: ");
+                    //email is searched for and if a member object is found it is stored in the memSearch variable
                     Member memSearch = gymApi.searchMembersByEmail(updateAssessmentSearch);
+                    //if memSearch is not null the updateAssessment() method will be run
                     if(memSearch != null){
-                        String updateComment = validNextString("Enter new comment:\n> ");
-                        memSearch.latestAssessment().setComment(updateComment);
-                        if(memSearch.latestAssessment().getComment().equals(updateComment)){
-                            System.out.println("Update Successful!");
-                            sleep(2000);
-                            insertLines();
-                        }
-                        else{
-                            System.out.println("Update Comment Error");
-                            sleep(3500);
-                        }
+                        updateAssessment(currTrainer, memSearch);
                     }
+                    //If no matching email is found then the user is told so
                     else{
                         System.out.println("Invalid Email: " + updateAssessmentSearch);
                     }
@@ -395,7 +391,6 @@ public class MenuController
                     System.out.println("Invalid option entered: " + option);
                     break;
             }
-
             option = loginMenu("trainerAssessmentMenu");
         }
     }
@@ -456,13 +451,20 @@ public class MenuController
         }
     }
 
+    /**
+     * A method to add a brand new and shiny assessment for a member object
+     * @param currTrainer Trainer object who is adding the assessment
+     * @param currMember Member object which will get a new assessment
+     */
     private void addAssessment(Trainer currTrainer, Member currMember){
 
+        //a double variable that will store the member's new weight
         double weight;
 
+        //Clearing console of useless text
         insertLines();
+        //prints member's profile and latest assessment to screen for the user to read if needed
         System.out.println("MEMBER:\n" + currMember.toString());
-
         System.out.println("\n\nNEW ASSESSMENT:");
         //ensures what is entered for the weight category is between 35 and 250
         //should non-numerical numbers be entered it will be caught by the validNextDouble() method
@@ -485,33 +487,60 @@ public class MenuController
             }
         }
 
-        double chest = validNextDouble("Chest:\n> ");
-        double thigh = validNextDouble("Thigh:\n> ");
-        double upperArm = validNextDouble("Upper Arm:\n> ");
-        double waist = validNextDouble("Waist:\n> ");
-        double hips = validNextDouble("Hips:\n> ");
-        String comment = validNextString("Trainer's Comment:\n> ");
+        //new measurements are stored in these variables along with the trainer's comment
+        double chest = validNextDouble("\nChest:\n> ");
+        double thigh = validNextDouble("\nThigh:\n> ");
+        double upperArm = validNextDouble("\nUpper Arm:\n> ");
+        double waist = validNextDouble("\nWaist:\n> ");
+        double hips = validNextDouble("\nHips:\n> ");
+        String comment = validNextString("\nTrainer's Comment:\n> ");
 
-
+        //new assessment is added to the member object with the above variables
         currMember.addAssessment(new Assessment(weight, chest, thigh, upperArm, waist, hips, comment, currTrainer));
-        if(currMember.latestAssessment().equals(comment)){
+        //This is just checking if the comment from the latest assessment matches the one the user input
+        //If this is true then we know the assessment comment was updated successfully
+        if(currMember.latestAssessment().getComment().equals(comment)){
+            //prompts the user saying it was added successfully
             System.out.println("Assessment Successfully Added.\nReturning to menu...");
             sleep(3500);
             insertLines();
         }
         else{
+            //if the latest assessment comment doesn't match what the user entered it will return an error message
             System.out.println("add Assessment Error");
             sleep(3500);
         }
     }
 
+    /**
+     * Is used to update the comments of the latest assessment that belongs to a member
+     * @param currTrainer the trainer who entered the updated comment
+     * @param currMember the member whose latest assessment is about to be updated
+     */
     private void updateAssessment(Trainer currTrainer, Member currMember){
 
-        insertLines();
+        //Printing out the member profile and latest assessment for the trainer to see
         System.out.println("MEMBER:\n" + currMember.toString());
         System.out.println("\n\nUPDATE ASSESSMENT:");
-
-
+        //The new comment is storeding in this string
+        String updateComment = validNextString("Enter new comment:\n> ");
+        //Comment is updated
+        currMember.latestAssessment().setComment(updateComment);
+        //Incase a different trainer updates the comment this will let others know who updated it
+        currMember.latestAssessment().setTrainer(currTrainer);
+        //This is just checking if the comment from the latest assessment matches the one the user input
+        //If this is true then we know the assessment comment was updated successfully
+        if(currMember.latestAssessment().getComment().equals(updateComment)){
+            //prompts the user saying it was added successfully
+            System.out.println("Update Successful!");
+            sleep(2000);
+            insertLines();
+        }
+        else{
+            //if the latest assessment comment doesn't match what the user entered it will return an error message
+            System.out.println("Update Assessment Error");
+            sleep(3500);
+        }
     }
 
     /**
