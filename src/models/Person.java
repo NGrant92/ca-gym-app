@@ -89,7 +89,9 @@ public abstract class Person {
      * @param email Updates the person's email
      */
     public void setEmail(String email) {
-        this.email = email;
+        if(email.contains("@")){
+            this.email = email;
+        }
     }
 
     /**
@@ -125,7 +127,7 @@ public abstract class Person {
         if (gender.equals("MALE") || gender.equals("FEMALE")){
             this.gender = gender.substring(0,1);
         }
-        else if (gender.length() == 1 && (gender.charAt(0) == 'M' || gender.charAt(0) == 'F')){
+        else if (gender.equals("M") || gender.equals("F")){
             this.gender = gender;
         }
     }

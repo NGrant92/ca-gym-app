@@ -52,7 +52,10 @@ public class StudentMember extends Member {
      * @param studentId Updates the Student's ID
      */
     public void setStudentId(int studentId) {
-        this.studentId = studentId;
+        if(studentId >= 100000 && studentId <= 999999 ){
+            this.studentId = studentId;
+        }
+
     }
 
     /**

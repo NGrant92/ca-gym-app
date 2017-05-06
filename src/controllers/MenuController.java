@@ -13,13 +13,15 @@ import static utils.ScannerInput.*;
 public class MenuController
 {
     private GymApi gymApi = new GymApi();
+    private String typeExit = "ex) Exit";
+    private String returnToMenu = "Returning to Previous Menu...";
 
     public static void main(String[] args)
     {
         new MenuController();
     }
 
-    public MenuController(){
+    private MenuController(){
         runMenu();
     }
 
@@ -44,8 +46,7 @@ public class MenuController
         System.out.println("");
         System.out.println(" l) Login");
         System.out.println(" r) Register");
-        System.out.println(" a) Assessment");
-        System.out.println(" exit) Exit");
+        System.out.println(" " + typeExit);
         System.out.println("");
         String option = validNextString("> ");
         return option.toLowerCase();
@@ -54,7 +55,7 @@ public class MenuController
     //This is the method that controls the loop
     private void runMenu(){
         String option = mainMenu();
-        while(option != "exit"){
+        while(!option.equalsIgnoreCase("ex")){
             switch(option){
                 case "l":
                     //brings the user to the log in menu
@@ -67,7 +68,7 @@ public class MenuController
                     break;
 
                 case "a":
-                    addAssessment(gymApi.getTrainers().get(0), gymApi.getMembers().get(0));
+                    //updateMember(gymApi.getMembers().get(0));
                     break;
 
                 default:
@@ -107,7 +108,7 @@ public class MenuController
             System.out.println("Invalid option entered: " + personType +
                                 "\nReturning to Menu.");
             //give the user time before returning to menu
-            sleep(3500);
+            sleep();
             //clearing the text from the console display
             insertLines();
             //returns to main menu
@@ -140,7 +141,7 @@ public class MenuController
             System.out.println("Invalid Email entered: " + personEmail +
                     "\nReturning to Menu.");
             //Program is paused for 3.5 seconds to allow reading time
-            sleep(3500);
+            sleep();
             //Clears screen of previous text from above
             insertLines();
         }
@@ -162,7 +163,7 @@ public class MenuController
         switch(menuType) {
             case "M":
                 profileChoices = " 1) View Profile\n" +
-                        " 2) Update Profile - NOT FIN -\n" +
+                        " 2) Update Profile\n" +
                         " 3) Progress Sub-Menu\n\n" +
                         " 0) Return to Main Menu";
                 break;
@@ -226,11 +227,17 @@ public class MenuController
             switch(option){
                 case 1:
                     //View Profile
+                    insertLines();
                     System.out.println(currMember.toString());
+                    validNextString("Press Enter to return..");
+                    System.out.println(returnToMenu);
+                    sleep();
+                    insertLines();
                     break;
 
                 case 2:
                     //Update Profile;
+                    updateMember(currMember);
                     break;
 
                 case 3:
@@ -315,39 +322,44 @@ public class MenuController
         while(option != 0){
             switch(option){
                 case 1:
-                    System.out.println(currMember.getName() + "'s Current Weight:");
-                    System.out.println(currMember.latestAssessment().getWeight());
+                    System.out.println(currMember.getName() + "'s Starting Weight: " + currMember.getWeight());
+                    System.out.println(currMember.getName() + "'s Current Weight: " + currMember.latestAssessment().getWeight());
                     break;
 
                 case 2:
-                    System.out.println(currMember.getName() + "'s Current Chest Measurement:");
-                    System.out.println(currMember.latestAssessment().getChest());
+                    System.out.println(currMember.getName() + "'s First Chest Measurement: " + currMember.firstAssessment().getChest());
+                    System.out.println(currMember.getName() + "'s Current Chest Measurement: " + currMember.latestAssessment().getChest());
                     break;
 
                 case 3:
-                    System.out.println(currMember.getName() + "'s Current Thigh Measurement:");
-                    System.out.println(currMember.latestAssessment().getThigh());
+                    System.out.println(currMember.getName() + "'s First Thigh Measurement: " + currMember.firstAssessment().getThigh());
+                    System.out.println(currMember.getName() + "'s Current Thigh Measurement: " + currMember.latestAssessment().getThigh());
                     break;
 
                 case 4:
-                    System.out.println(currMember.getName() + "'s Current Arm Measurement:");
-                    System.out.println(currMember.latestAssessment().getUpperArm());
+                    System.out.println(currMember.getName() + "'s First Arm Measurement: " + currMember.firstAssessment().getUpperArm());
+                    System.out.println(currMember.getName() + "'s Current Arm Measurement: " + currMember.latestAssessment().getUpperArm());
                     break;
 
                 case 5:
-                    System.out.println(currMember.getName() + "'s Current Waist Measurement:");
-                    System.out.println(currMember.latestAssessment().getWaist());
+                    System.out.println(currMember.getName() + "'s First Waist Measurement: " + currMember.firstAssessment().getWaist());
+                    System.out.println(currMember.getName() + "'s Current Waist Measurement: " + currMember.latestAssessment().getWaist());
                     break;
 
                 case 6:
-                    System.out.println(currMember.getName() + "'s Current Hip Measurement:");
-                    System.out.println(currMember.latestAssessment().getHips());
+                    System.out.println(currMember.getName() + "'s First Hip Measurement: " + currMember.firstAssessment().getHips());
+                    System.out.println(currMember.getName() + "'s Current Hip Measurement: " + currMember.latestAssessment().getHips());
                     break;
 
                 default:
                     System.out.println("Invalid option entered: " + option);
                     break;
             }
+
+            validNextString("\nPress Enter to return..");
+            System.out.println(returnToMenu);
+            sleep();
+
 
             option = loginMenu("memberProgress");
         }
@@ -514,13 +526,13 @@ public class MenuController
         if(currMember.latestAssessment().getComment().equals(comment)){
             //prompts the user saying it was added successfully
             System.out.println("Assessment Successfully Added.\nReturning to menu...");
-            sleep(3500);
+            sleep();
             insertLines();
         }
         else{
             //if the latest assessment comment doesn't match what the user entered it will return an error message
             System.out.println("add Assessment Error");
-            sleep(3500);
+            sleep();
         }
     }
 
@@ -545,13 +557,139 @@ public class MenuController
         if(currMember.latestAssessment().getComment().equals(updateComment)){
             //prompts the user saying it was added successfully
             System.out.println("Update Successful!");
-            sleep(2000);
+            sleep();
             insertLines();
         }
         else{
             //if the latest assessment comment doesn't match what the user entered it will return an error message
             System.out.println("Update Assessment Error");
-            sleep(3500);
+            sleep();
+        }
+    }
+
+    private void updateMember(Member currMember){
+        insertLines();
+
+        System.out.println(currMember.toString());
+        System.out.println("Select the feature you wish to update:");
+        System.out.println("NAME(n) EMAIL(e) GENDER(g) HEIGHT(h) SARTING WEIGHT(sw)");
+        if(currMember.getChosenPackage().equals("STUDENT")){
+            System.out.println("STUDENT ID(si) COLLEGE(c)");
+        }
+        System.out.println(typeExit);
+        String updateOption = validNextString("\n> ");
+
+        switch(updateOption.toLowerCase()){
+            case "n":
+                String name = validNextString("Enter new Name:\n> ");
+                currMember.setName(name);
+                if(currMember.getName().equals(name)){
+                    System.out.println("Update Successful");
+                }
+                else{
+                    System.out.println("Update Name Error: " + name);
+                }
+                break;
+
+            case "e":
+                String email = validNextString("Enter new Email:\n> ");
+                currMember.setEmail(email);
+                if(currMember.getEmail().equals(email)){
+                    System.out.println("Update Successful");
+                }
+                else{
+                    System.out.println("Update Email Error: " + email);
+                }
+                break;
+
+            case "g":
+                String gender = validNextString("Enter new Gender:\n> ");
+                currMember.setGender(gender);
+                if(currMember.getGender().equals(gender)){
+                    System.out.println("Update Successful");
+                }
+                else{
+                    System.out.println("Update Gender Error: " + gender);
+                    sleep();
+                }
+                break;
+
+            case "h":
+                double height = validNextDouble("Enter new Height:\n> ");
+                currMember.setHeight(height);
+                if(currMember.getHeight() == height){
+                    System.out.println("Update Successful");
+                }
+                else{
+                    System.out.println("Update Height Error: " + height);
+                    sleep();
+                }
+                break;
+
+            case "sw":
+                double weight = validNextDouble("Enter new Starting Weight:\n> ");
+                currMember.setWeight(weight);
+                if(currMember.getWeight() == weight){
+                    System.out.println("Update Successful");
+                }
+                else{
+                    System.out.println("Update Weight Error: " + weight);
+                    sleep();
+                }
+                break;
+
+            case "si":
+                //REFERENCE: http://stackoverflow.com/questions/898909/is-it-possible-to-call-subclasses-methods-on-a-superclass-object
+                //Using the instanceof operator it allows me to call methods from the StudentMember object as long as the object is
+                //a StudentMember type
+                if(currMember instanceof StudentMember) {
+
+                    int studentID = validNextInt("Enter new Student ID:\n> ");
+                    ((StudentMember)currMember).setStudentId(studentID);
+                    if(((StudentMember)currMember).getStudentId() == studentID){
+                        System.out.println("Update Successful");
+                    }
+                    else{
+                        System.out.println("Update Weight Error: " + studentID);
+                    }
+                }
+                else{
+                    System.out.println("Invalid option entered: " + updateOption);
+                    sleep();
+                }
+                break;
+
+            case "c":
+                //Using the instanceof operator it allows me to call methods from the StudentMember object
+                // as long as the object is a StudentMember type
+                if(currMember instanceof StudentMember) {
+
+                    //
+                    String college = validNextString("Enter new Student ID:\n> ");
+                    ((StudentMember)currMember).setCollegeName(college);
+                    if(((StudentMember)currMember).getCollegeName().equals(college)){
+                        System.out.println("Update Successful");
+                    }
+                    else{
+                        System.out.println("Update Weight Error: " + college);
+                        sleep();
+                    }
+                }
+                else{
+                    System.out.println("Invalid option entered: " + updateOption);
+                    sleep();
+                }
+                break;
+
+            case "ex":
+                System.out.println(returnToMenu);
+                sleep();
+                insertLines();
+                break;
+
+            default:
+                System.out.println("Update Member Error");
+                sleep();
         }
     }
 
@@ -562,8 +700,9 @@ public class MenuController
      */
     private void addMember() {
         insertLines();
+
         System.out.println("Please enter the following member details: ");
-        System.out.println("(Type 'EXIT' to return to previous menu)");
+        System.out.println(typeExit);
 
         String memberEmail, memberName, memberAddress, gender, chosenPackage, memberCollege;
         double height, startingWeight;
@@ -574,7 +713,10 @@ public class MenuController
             //the user enters the desired email
             memberEmail = validNextString("Email:\n> ");
             //if user types in exit then they will be returned to the previous menu
-            if (memberEmail.equalsIgnoreCase("exit")) {
+            if (memberEmail.equalsIgnoreCase("ex")) {
+                System.out.println(returnToMenu);
+                sleep();
+                insertLines();
                 return;
             }
             //TODO http://stackoverflow.com/questions/8204680/java-regex-email/13013056#13013056
@@ -596,7 +738,6 @@ public class MenuController
         //a while loop to ensure the user enters a valid name
         while (true) {
             //The name that will be tested and added to a new member object if it proves valid
-            System.out.println("Type 'EXIT' to return to previous menu");
             memberName = validNextString("Name:\n> ");
 
             //a boolean that will have it's flag raised should anything other than letters is detected
@@ -614,7 +755,10 @@ public class MenuController
             }
 
             //if the user entered "exit" then they will be returned to the previous menu
-            if (memberName.equalsIgnoreCase("exit")) {
+            if (memberName.equalsIgnoreCase("ex")) {
+                System.out.println(returnToMenu);
+                sleep();
+                insertLines();
                 return;
             }
             //if numsDetected = true then it will prompt the user with "invalid option entered"
@@ -703,8 +847,8 @@ public class MenuController
         //ensures what is entered is either a premium or student package
         while(true){
 
-            System.out.println("Available Packages: (Premium) or (Student)");
-            chosenPackage = validNextString("Chose a package(P/S):\n> ");
+            System.out.println("Available Packages: Premium or Student");
+            chosenPackage = validNextString("Choose a package(P/S):\n> ");
             chosenPackage = chosenPackage.toUpperCase();
 
             //if the user entered "exit" then they will be returned to the previous menu
@@ -755,7 +899,6 @@ public class MenuController
             //a while loop to ensure memberCollege contains only letters and spaces
             while(true){
 
-                System.out.println("Type 'EXIT' to return to previous menu");
                 memberCollege = validNextString("College:\n> ");
 
                 //a boolean that will have it's flag raised should anything other than letters is detected
@@ -787,8 +930,6 @@ public class MenuController
                     break;
                 }
             }
-
-
             //a student member object is now created and entered into the members array
             gymApi.addMember(new StudentMember(memberEmail, memberName, memberAddress, gender, height,
                     startingWeight, chosenPackage, memberStudentID, memberCollege));
@@ -798,10 +939,11 @@ public class MenuController
             System.out.println("" + gymApi.getMembers().get(gymApi.numberOfMembers() - 1).getName() +" Student Member is successfully added");
 
             //give the user reading time before returning to menu
-            sleep(3500);
+            sleep();
             //clears the console of the above text
             insertLines();
         }
+
         else if (chosenPackage.contains("PREMIUM")){
             //a premium member object is added to the members array
             gymApi.addMember(new PremiumMember(memberEmail, memberName, memberAddress, gender, height,
@@ -812,7 +954,7 @@ public class MenuController
             System.out.println("" + gymApi.getMembers().get(gymApi.numberOfMembers() - 1).getName() +" Premium Member is successfully added");
 
             //give the user reading time before returning to menu
-            sleep(3500);
+            sleep();
             //clears the console of the above text
             insertLines();
         }
@@ -820,11 +962,12 @@ public class MenuController
             System.out.println("Add Member Error.");
 
             //give the user reading time before returning to menu
-            sleep(3500);
+            sleep();
             //clears the console of the above text
             insertLines();
         }
     }
+
 
     /**
      * Prints out blank lines to stop a player reading the previous turn
@@ -837,16 +980,12 @@ public class MenuController
 
     /**
      * A method that will tell the gym app to wait before executing more code
-     * @param i The amount of time the gym app must wait(in milliseconds)
      */
-    private void sleep(int i){
+    private void sleep(){
         try {
-            Thread.sleep(i);
+            Thread.sleep(3500);
         } catch (Exception e) {
             System.out.println(e.toString());
         }
     }
-
 }
-
-

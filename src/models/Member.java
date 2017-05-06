@@ -98,7 +98,9 @@ public abstract class Member extends Person{
      * @param height Updates the member's height
      */
     public void setHeight(double height) {
-        this.height = height;
+        if(height >= 1.0 && height <= 3.0) {
+            this.height = height;
+        }
     }
 
     /**
@@ -106,7 +108,9 @@ public abstract class Member extends Person{
      * @param startingWeight Updates the member's starting weight
      */
     public void setWeight(double startingWeight) {
-        this.startingWeight = startingWeight;
+        if(startingWeight >= 35 && startingWeight <= 250) {
+            this.startingWeight = startingWeight;
+        }
     }
 
     /**
@@ -114,7 +118,9 @@ public abstract class Member extends Person{
      * @param chosenPackage Updates the member's Chosen Package
      */
     public void setChosenPackage(String chosenPackage) {
-        this.chosenPackage = chosenPackage;
+        if(chosenPackage.toUpperCase().equals("PREMIUM") || chosenPackage.toUpperCase().equals("STUDENT")){
+            this.chosenPackage = chosenPackage;
+        }
     }
 
     //--------------
@@ -122,6 +128,10 @@ public abstract class Member extends Person{
     //--------------
 
 
+    /**
+     * Adds a new assessment to the the member's Assessment HashMap
+     * @param newAssessment The assessment object to be added to the member's assessment HashMap
+     */
     public void addAssessment(Assessment newAssessment){
 
         trainerAssessment.put(new Date(), newAssessment);
@@ -138,13 +148,22 @@ public abstract class Member extends Person{
     }
 
     /**
+     * Returns the first assessment based on the first entry (by calendar date).
+     * @return Returns the first assessment based on the first entry (by calendar date).
+     */
+    public Assessment firstAssessment(){
+
+        return trainerAssessment.get(sortedAssessmentDates().first());
+
+    }
+
+    /**
      * Returns the assessments dates sorted in date order.
      * @return Returns the assessments dates sorted in date order.
      */
     public SortedSet<Date> sortedAssessmentDates(){
 
-        SortedSet<Date> sortedDates = new TreeSet<>(trainerAssessment.keySet());
-        return sortedDates;
+        return new TreeSet<>(trainerAssessment.keySet());
     }
 
     public abstract void chosenPackage(String packageChoice);
