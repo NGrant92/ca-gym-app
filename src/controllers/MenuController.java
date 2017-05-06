@@ -192,7 +192,7 @@ public class MenuController
 
             case "trainerAssessmentMenu":
                 profileChoices = " 1) Add an assessment for a member\n" +
-                        " 2) Update comment on an assessment for a member - NOT FIN -\n\n" +
+                        " 2) Update comment on an assessment for a member\n\n" +
                         " 0) Return to Previous Menu";
                 break;
 
@@ -542,12 +542,19 @@ public class MenuController
      * @param currMember the member whose latest assessment is about to be updated
      */
     private void updateAssessment(Trainer currTrainer, Member currMember){
-
+        insertLines();
         //Printing out the member profile and latest assessment for the trainer to see
         System.out.println("MEMBER:\n" + currMember.toString());
         System.out.println("\n\nUPDATE ASSESSMENT:");
         //The new comment is storeding in this string
-        String updateComment = validNextString("Enter new comment:\n> ");
+        String updateComment = validNextString("Enter New Comment\n> ");
+
+        if(updateComment.equalsIgnoreCase("ex")){
+            System.out.println(returnToMenu);
+            sleep();
+            insertLines();
+            return;
+        }
         //Comment is updated
         currMember.latestAssessment().setComment(updateComment);
         //Incase a different trainer updates the comment this will let others know who updated it
@@ -556,7 +563,7 @@ public class MenuController
         //If this is true then we know the assessment comment was updated successfully
         if(currMember.latestAssessment().getComment().equals(updateComment)){
             //prompts the user saying it was added successfully
-            System.out.println("Update Successful!");
+            System.out.println("Update Successful!" + returnToMenu);
             sleep();
             insertLines();
         }
@@ -754,7 +761,7 @@ public class MenuController
                 }
             }
 
-            //if the user entered "exit" then they will be returned to the previous menu
+            //if the user entered ex then they will be returned to the previous menu
             if (memberName.equalsIgnoreCase("ex")) {
                 System.out.println(returnToMenu);
                 sleep();
@@ -776,7 +783,7 @@ public class MenuController
         //addresses vary and can contain a mix of letters and numbers so this one is left open and without validation
         memberAddress = validNextString("Address:\n");
         //incase the user decides to exit at this stage, they have the option to do so
-        if(memberAddress.equalsIgnoreCase("exit")){
+        if(memberAddress.equalsIgnoreCase("ex")){
             return;
         }
 
@@ -786,8 +793,8 @@ public class MenuController
             gender = validNextString("Gender(M/F):\n> ");
             gender = gender.toUpperCase();
 
-            //if the user entered "exit" then they will be returned to the previous menu
-            if (memberName.equalsIgnoreCase("exit")) {
+            //if the user entered ex then they will be returned to the previous menu
+            if (memberName.equalsIgnoreCase("ex")) {
                 return;
             }
             //if the user enters "male" or "female" then will accept those appropriate answers
@@ -851,8 +858,8 @@ public class MenuController
             chosenPackage = validNextString("Choose a package(P/S):\n> ");
             chosenPackage = chosenPackage.toUpperCase();
 
-            //if the user entered "exit" then they will be returned to the previous menu
-            if(chosenPackage.equalsIgnoreCase("exit")){
+            //if the user entered ex then they will be returned to the previous menu
+            if(chosenPackage.equalsIgnoreCase("ex")){
                 return;
             }
             //if user enters P it will save chosenPackage as PREMIUM before breaking the loop
@@ -915,8 +922,8 @@ public class MenuController
                     }
                 }
 
-                //if the user entered "exit" then they will be returned to the previous menu
-                if (memberCollege.equalsIgnoreCase("exit")) {
+                //if the user entered ex then they will be returned to the previous menu
+                if (memberCollege.equalsIgnoreCase("ex")) {
                     return;
                 }
                 //if numsDetected = true then it will prompt the user with "invalid option entered"
