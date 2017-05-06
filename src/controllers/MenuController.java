@@ -175,8 +175,8 @@ public class MenuController
             case "T":
                 profileChoices = " 1) Add New Member\n" +
                         " 2) List All Members\n" +
-                        " 3) Search For Member By Email - NOT FIN -\n" +
-                        " 4) Search For Member By Name - NOT FIN -\n" +
+                        " 3) Search For Member By Email\n" +
+                        " 4) Search For Member By Name\n" +
                         " 5) List Members By Ideal Body Weight - NOT FIN -\n" +
                         " 6) List Members With A Specific BMI - NOT FIN -\n" +
                         " 7) Assessment Sub-Menu\n" +
@@ -290,10 +290,48 @@ public class MenuController
 
                 case 3:
                     //Search members by email;
+                    //asks user to enter an email to be used to searched for
+                    System.out.println("SEARCH VIA EMAIL");
+                    //user input is stored to be searched
+                    String emailSearch = validNextString("\nEmail: ");
+                    //email is searched for and if a member object is found it is stored in the foundMem variable
+                    Member foundMem = gymApi.searchMembersByEmail(emailSearch);
+                    //if memSearch is not null the addAssessment() method will be run
+                    if( foundMem != null){
+                        System.out.println(foundMem.toString());
+                        System.out.println(returnToMenu);
+                        sleep();
+                        insertLines();
+                    }
+                    //If no matching email is found then the user is told so
+                    else{
+                        System.out.println("Invalid Email: " + emailSearch);
+                        sleep();
+                        insertLines();
+                    }
                     break;
 
                 case 4:
                     //Search members by name;
+                    //asks user to enter an email to be used to searched for
+                    System.out.println("SEARCH VIA NAME");
+                    //user input is stored to be searched
+                    String nameSearch = validNextString("\nName: ");
+                    //email is searched for and if a member object is found it is stored in the foundMem variable
+                    String foundName = gymApi.searchMembersByName(nameSearch);
+                    //if memSearch is not null the addAssessment() method will be run
+                    if(!foundName.equals("")){
+                        System.out.println(foundName);
+                        System.out.println(returnToMenu);
+                        sleep();
+                        insertLines();
+                    }
+                    //If no matching email is found then the user is told so
+                    else{
+                        System.out.println("Invalid Name: " + nameSearch);
+                        sleep();
+                        insertLines();
+                    }
                     break;
 
 
