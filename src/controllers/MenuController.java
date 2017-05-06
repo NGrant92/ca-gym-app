@@ -1,6 +1,10 @@
 package controllers;
 
 import models.*;
+
+import java.util.Date;
+import java.util.HashMap;
+
 import static utils.ScannerInput.*;
 
 
@@ -208,9 +212,7 @@ public class MenuController
         }
 
         System.out.println("Enter the number for the action you wish to take:");
-        System.out.println("");
-        System.out.println(profileChoices);
-        System.out.println("");
+        System.out.println("\n" + profileChoices + "\n");
         int option = validNextInt("> ");
         return option;
     }
@@ -238,7 +240,16 @@ public class MenuController
                 case 2:
                     //Update Profile;
                     updateMember(currMember);
-                    break;
+                    //if a member updates their package they will have to be brought back to main menu to relog
+                    //if they're not logged out then they can make duplicates of themselves
+                    //if the last member in the array has the same email but not the same package, they're logged out
+                    if(!currMember.getChosenPackage().equals(gymApi.getMembers().get(gymApi.getMembers().size() - 1).getChosenPackage()) &&
+                            currMember.getEmail().equals(gymApi.getMembers().get(gymApi.getMembers().size() - 1).getEmail())){
+                        return;
+                    }
+                    else{
+                        break;
+                    }
 
                 case 3:
                     //Progress Menu that will let them see their current measurements
@@ -270,7 +281,11 @@ public class MenuController
 
                 case 2:
                     //Lists out all the registered members
+                    insertLines();
                     System.out.println(gymApi.listMembers());
+                    System.out.println(returnToMenu);
+                    sleep();
+                    insertLines();
                     break;
 
                 case 3:
@@ -574,111 +589,116 @@ public class MenuController
         }
     }
 
+    private int updateMenu(Member currMember){
+
+        //prints out the member's details for the user to see
+        System.out.println(currMember.toString());
+
+        System.out.println("Select the feature you wish to update:");
+        System.out.println(" 1) NAME\n 2) EMAIL\n 3) GENDER\n 4) HEIGHT\n 5) SARTING WEIGHT");
+        if(currMember.getChosenPackage().equals("STUDENT")){
+            System.out.println(" 6) STUDENT ID\n 7) COLLEGE");
+        }
+        System.out.println(" 8) PACKAGE TYPE");
+        System.out.println("\n 0) Exit");
+        int updateOption = validNextInt("\n> ");
+
+        return updateOption;
+    }
+    /**
+     * A method when called will ask the user if which member feature they wish to update
+     * @param currMember The member to be updated
+     */
     private void updateMember(Member currMember){
+        //clears console of previous text
         insertLines();
 
-        System.out.println(currMember.toString());
-        System.out.println("Select the feature you wish to update:");
-        System.out.println("NAME(n) EMAIL(e) GENDER(g) HEIGHT(h) SARTING WEIGHT(sw)");
-        if(currMember.getChosenPackage().equals("STUDENT")){
-            System.out.println("STUDENT ID(si) COLLEGE(c)");
-        }
-        System.out.println(typeExit);
-        String updateOption = validNextString("\n> ");
-
-        switch(updateOption.toLowerCase()){
-            case "n":
+        int updateOption = updateMenu(currMember);
+        switch(updateOption){
+            case 1:
+                //updates member's name
                 String name = validNextString("Enter new Name:\n> ");
                 currMember.setName(name);
+                //double checking name is updated
                 if(currMember.getName().equals(name)){
                     System.out.println("Update Successful");
                 }
+                //if not it will prompt user with this message
                 else{
                     System.out.println("Update Name Error: " + name);
                 }
                 break;
 
-            case "e":
+            case 2:
                 String email = validNextString("Enter new Email:\n> ");
                 currMember.setEmail(email);
                 if(currMember.getEmail().equals(email)){
                     System.out.println("Update Successful");
                 }
+                //if not it will prompt user with this message
                 else{
                     System.out.println("Update Email Error: " + email);
                 }
                 break;
 
-            case "g":
+            case 3:
                 String gender = validNextString("Enter new Gender:\n> ");
                 currMember.setGender(gender);
                 if(currMember.getGender().equals(gender)){
                     System.out.println("Update Successful");
                 }
+                //if not it will prompt user with this message
                 else{
                     System.out.println("Update Gender Error: " + gender);
                     sleep();
                 }
                 break;
 
-            case "h":
+            case 4:
                 double height = validNextDouble("Enter new Height:\n> ");
                 currMember.setHeight(height);
                 if(currMember.getHeight() == height){
                     System.out.println("Update Successful");
                 }
+                //if not it will prompt user with this message
                 else{
                     System.out.println("Update Height Error: " + height);
                     sleep();
                 }
                 break;
 
-            case "sw":
+            case 5:
                 double weight = validNextDouble("Enter new Starting Weight:\n> ");
                 currMember.setWeight(weight);
                 if(currMember.getWeight() == weight){
                     System.out.println("Update Successful");
                 }
+                //if not it will prompt user with this message
                 else{
                     System.out.println("Update Weight Error: " + weight);
                     sleep();
                 }
                 break;
 
-            case "si":
+            case 6:
                 //REFERENCE: http://stackoverflow.com/questions/898909/is-it-possible-to-call-subclasses-methods-on-a-superclass-object
                 //Using the instanceof operator it allows me to call methods from the StudentMember object as long as the object is
                 //a StudentMember type
                 if(currMember instanceof StudentMember) {
 
                     int studentID = validNextInt("Enter new Student ID:\n> ");
+                    //Changing student id
                     ((StudentMember)currMember).setStudentId(studentID);
+                    //double checking to see if new student ID matches their new one
                     if(((StudentMember)currMember).getStudentId() == studentID){
                         System.out.println("Update Successful");
+                        sleep();
+                        insertLines();
                     }
+                    //if not it will prompt user with this message
                     else{
-                        System.out.println("Update Weight Error: " + studentID);
-                    }
-                }
-                else{
-                    System.out.println("Invalid option entered: " + updateOption);
-                    sleep();
-                }
-                break;
-
-            case "c":
-                //Using the instanceof operator it allows me to call methods from the StudentMember object
-                // as long as the object is a StudentMember type
-                if(currMember instanceof StudentMember) {
-
-                    //
-                    String college = validNextString("Enter new Student ID:\n> ");
-                    ((StudentMember)currMember).setCollegeName(college);
-                    if(((StudentMember)currMember).getCollegeName().equals(college)){
-                        System.out.println("Update Successful");
-                    }
-                    else{
-                        System.out.println("Update Weight Error: " + college);
+                        System.out.println("Update StudentID Error: " + studentID);
+                        System.out.println("Please ensure ID is between 100000 - 999999");
                         sleep();
                     }
                 }
@@ -688,7 +708,97 @@ public class MenuController
                 }
                 break;
 
-            case "ex":
+            case 7:
+                //Using the instanceof operator it allows me to call methods from the StudentMember object
+                // as long as the object is a StudentMember type
+                if(currMember instanceof StudentMember) {
+
+                    String college = validNextString("Enter new College:\n> ");
+                    //Changing college name
+                    ((StudentMember)currMember).setCollegeName(college);
+                    //double checking to see if new college name matches their new one
+                    if(((StudentMember)currMember).getCollegeName().equals(college)){
+                        System.out.println("Update Successful");
+                        sleep();
+                        insertLines();
+                    }
+                    //prompted with a message if they don't match
+                    else{
+                        System.out.println("Update College Error: " + college);
+                        sleep();
+                    }
+                }
+                //if user is not a student then they will be prompted with this message
+                else{
+                    System.out.println("Invalid option entered: " + updateOption);
+                    sleep();
+                }
+                break;
+
+            case 8:
+                String packageOption = validNextString("Do you wish to be a Premium(P) or Student(S) Member?\n> ");
+                //switching to student package
+                //true if they entered P and are not already a PremiumMember
+                if(packageOption.equalsIgnoreCase("p") && !(currMember instanceof PremiumMember)){
+
+                    //A new Premium Member object is added to Members array. Parameters from currentMember is used to fill
+                    //the parameters for the new PremiumMember object
+                    gymApi.getMembers().add(new PremiumMember(currMember.getEmail(), currMember.getName(), currMember.getAddress(),
+                            currMember.getGender(), currMember.getHeight(), currMember.getWeight(), "PREMIUM"));
+
+                    //The hash map of assessments from currMember are added the the new PremiumMember obejct
+                    gymApi.getMembers().get(gymApi.getMembers().size() - 1).addAllAssessments(currMember.getAssessments());
+
+                    //currMember is deleted
+                    gymApi.getMembers().remove(currMember);
+
+                    //user is prompted
+                    System.out.println("Package successfully changed.\nReturning to Main Menu");
+                    sleep();
+                    insertLines();
+                    return;
+                }
+                //switching to student package
+                //true if they entered T and are not already a StudentMember
+                else if(packageOption.equalsIgnoreCase("s") && !(currMember instanceof StudentMember)){
+
+                    //user is asked for their college and student ID
+                    int studentID = validNextInt("\nStudent ID: ");
+                    String college = validNextString("\nCollege: ");
+                    //A new StudentMember object is added to Members array. Parameters from currentMember is used to fill
+                    //the parameters for the new StudentMember object along with the newly entered studentID and College name
+                    gymApi.getMembers().add(new StudentMember(currMember.getEmail(), currMember.getName(), currMember.getAddress(),
+                            currMember.getGender(), currMember.getHeight(), currMember.getWeight(), "STUDENT", studentID, college));
+
+                    //The hash map of assessments from currMember are added the the new PremiumMember obejct
+                    HashMap<Date, Assessment> oldAssessments = currMember.getAssessments();
+                    gymApi.getMembers().get(gymApi.getMembers().size() - 1).addAllAssessments(oldAssessments);
+
+                    //currMember is deleted
+                    gymApi.getMembers().remove(currMember);
+
+                    //user is prompted
+                    System.out.println("Package successfully changed.\nReturning to Main Menu");
+                    sleep();
+                    insertLines();
+                    return;
+                }
+                //if they enter something other than S or T
+                else if (!packageOption.equalsIgnoreCase("s") && !packageOption.equalsIgnoreCase("p")){
+                    System.out.println("Invalid option entered: " + packageOption);
+                    sleep();
+                    insertLines();
+                    break;
+                }
+                //if user is already the same type they're trying to become
+                else{
+                    System.out.println("You are already of that member type.");
+                    sleep();
+                    insertLines();
+                    break;
+                }
+
+            case 0:
                 System.out.println(returnToMenu);
                 sleep();
                 insertLines();
@@ -967,14 +1077,11 @@ public class MenuController
         }
         else{
             System.out.println("Add Member Error.");
-
             //give the user reading time before returning to menu
             sleep();
             //clears the console of the above text
-            insertLines();
         }
     }
-
 
     /**
      * Prints out blank lines to stop a player reading the previous turn

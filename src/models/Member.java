@@ -66,6 +66,15 @@ public abstract class Member extends Person{
     //-------
 
     /**
+     * Returns the hash map of assessments
+     * @return the hash map of assessments
+     */
+    public HashMap<Date, Assessment> getAssessments(){
+
+        return trainerAssessment;
+    }
+
+    /**
      * Returns the member's height in meters
      * @return The member's height in meters
      */
@@ -128,6 +137,7 @@ public abstract class Member extends Person{
     //--------------
 
 
+
     /**
      * Adds a new assessment to the the member's Assessment HashMap
      * @param newAssessment The assessment object to be added to the member's assessment HashMap
@@ -164,6 +174,14 @@ public abstract class Member extends Person{
     public SortedSet<Date> sortedAssessmentDates(){
 
         return new TreeSet<>(trainerAssessment.keySet());
+    }
+
+    /**
+     * Adds a new hashmap of assessments to the the member's Assessment HashMap
+     */
+    public void addAllAssessments(HashMap<Date, Assessment> allAssessments){
+
+        trainerAssessment.putAll(allAssessments);
     }
 
     public abstract void chosenPackage(String packageChoice);
