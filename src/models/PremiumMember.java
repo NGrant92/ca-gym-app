@@ -23,23 +23,4 @@ public class PremiumMember extends Member{
 
         setChosenPackage(packageChoice);
     }
-
-    /**
-     * Returns a human readable String interpretation of the member's details
-     * @return A string version of the premium member object.
-     */
-    @Override
-    public String toString() {
-        String latestAssessment = "No Assessments";
-        if(getAssessments().size() > 0){
-            latestAssessment = latestAssessment().toString();
-        }
-
-        return  "NAME..........." + getName() + "\n" +
-                "EMAIL.........." + getEmail() + "\n" +
-                "GENDER........." + getGender() + "\n" +
-                "HEIGHT........." + getHeight() + "\n" +
-                "START WEIGHT..." + getWeight() + "\n\n" +
-                "LATEST ASSESSMENT:" + "\n" + latestAssessment;
-    }
 }

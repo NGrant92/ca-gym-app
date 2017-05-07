@@ -210,7 +210,7 @@ public class GymApi {
 
         //If there are any members found to have a matching name then the results are returned
         if(searchCounter > 0){
-            return "" + searchCounter + " Results found for: " + nameEntered + "\n" + foundMembers;
+            return "" + searchCounter + " Results found for: " + nameEntered + "\n" + foundMembers + "\n";
         }
 
         //if there are zero members in the members array list then it will return this string

@@ -54,6 +54,16 @@
         <chosenPackage>PREMIUM</chosenPackage>
         <trainerAssessment/>
       </models.PremiumMember>
+      <models.PremiumMember>
+        <email>test5@tmail.com</email>
+        <name>Wade Wilson</name>
+        <address>Canada</address>
+        <gender>M</gender>
+        <height>2.1</height>
+        <startingWeight>77.0</startingWeight>
+        <chosenPackage>PREMIUM</chosenPackage>
+        <trainerAssessment/>
+      </models.PremiumMember>
     </members>
   </utils.SaveManager>
 </object-stream>

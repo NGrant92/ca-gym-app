@@ -1,7 +1,13 @@
 package controllers;
 
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.io.xml.DomDriver;
 import models.*;
 
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -26,6 +32,7 @@ public class MenuController
     }
 
     private MenuController(){
+
         runMenu();
     }
 
@@ -63,16 +70,14 @@ public class MenuController
             switch(option){
                 case "l":
                     //brings the user to the log in menu
-                    login();
+                    //User is asked if they wish to login as a Member or a Trainer
+                    personType("login");
                     break;
 
                 case "r":
-                    //allows a new person to be registered
-                    addMember();
-                    break;
-
-                case "a":
-                    //updateMember(gymApi.getMembers().get(0));
+                    //register a person
+                    //User is asked if they wish to register a Member or a Trainer
+                    personType("register");
                     break;
 
                 default:
@@ -93,41 +98,12 @@ public class MenuController
      * will be to know which array(members or trainers) to search when asked for an email to log in.
      * It will also let the method know which menu to display.
      */
-    private void login(){
+    private void login(String personType, String personTitle){
 
-        //A string variable that will be printed to screen depending on the person type
-        String personLogin = "";
-
-
-        //Empty lines to clean out the console display
-        insertLines();
-        //asking if they're a member or trainer
-        String personType = validNextString("Yo bro! You a Member or a Trainer? (M or T)\n> ");
-        //ensuring what the entered it upper case
-        personType = personType.toUpperCase();
-
-        //if they have no entered 'm' or 't' then the user will be brought back to the menu
-        if(!personType.equals("M") && !personType.equals("T")){
-            //Telling the user they messed up
-            System.out.println("Invalid option entered: " + personType +
-                                "\nReturning to Menu.");
-            //give the user time before returning to menu
-            sleep();
-            //clearing the text from the console display
-            insertLines();
-            //returns to main menu
-            return;
-        }
-        else if(personType.equals("M")){
-            personLogin = "MEMBER";
-        }
-        else if(personType.equals("T")){
-            personLogin = "TRAINER";
-        }
         //Clears screen of previous text from above
         insertLines();
 
-        System.out.println(personLogin + " LOGIN SCREEN:");
+        System.out.println(personTitle + " LOGIN SCREEN:");
 
         //asking for users email
         String personEmail = validNextString("Enter Your Email:\n> ");
@@ -275,7 +251,7 @@ public class MenuController
             switch(option){
                 case 1:
                     //Adds a member to the members array
-                    addMember();
+                    addMember("M", "MEMBER");
                     break;
 
                 case 2:
@@ -290,10 +266,11 @@ public class MenuController
 
                 case 3:
                     //Search members by email;
+                    insertLines();
                     //asks user to enter an email to be used to searched for
                     System.out.println("SEARCH VIA EMAIL");
                     //user input is stored to be searched
-                    String emailSearch = validNextString("\nEmail: ");
+                    String emailSearch = validNextString("Email: ");
                     //email is searched for and if a member object is found it is stored in the foundMem variable
                     Member foundMem = gymApi.searchMembersByEmail(emailSearch);
                     //if memSearch is not null the addAssessment() method will be run
@@ -313,10 +290,11 @@ public class MenuController
 
                 case 4:
                     //Search members by name;
+                    insertLines();
                     //asks user to enter an email to be used to searched for
                     System.out.println("SEARCH VIA NAME");
                     //user input is stored to be searched
-                    String nameSearch = validNextString("\nName: ");
+                    String nameSearch = validNextString("Name: ");
                     //email is searched for and if a member object is found it is stored in the foundMem variable
                     String foundName = gymApi.searchMembersByName(nameSearch);
                     //if memSearch is not null the addAssessment() method will be run
@@ -372,51 +350,57 @@ public class MenuController
      * @param currMember The member to be reviewed
      */
     private void memberProgress(Member currMember){
-        int option = loginMenu("memberProgress");
-        while(option != 0){
-            switch(option){
-                case 1:
-                    System.out.println(currMember.getName() + "'s Starting Weight: " + currMember.getWeight());
-                    System.out.println(currMember.getName() + "'s Current Weight: " + currMember.latestAssessment().getWeight());
-                    break;
+        insertLines();
+        if(currMember.getAssessments().size() > 0){
+            int option = loginMenu("memberProgress");
+            while(option != 0) {
+                switch (option) {
+                    case 1:
+                        System.out.println(currMember.getName() + "'s Starting Weight: " + currMember.getWeight());
+                        System.out.println(currMember.getName() + "'s Current Weight: " + currMember.latestAssessment().getWeight());
+                        break;
 
-                case 2:
-                    System.out.println(currMember.getName() + "'s First Chest Measurement: " + currMember.firstAssessment().getChest());
-                    System.out.println(currMember.getName() + "'s Current Chest Measurement: " + currMember.latestAssessment().getChest());
-                    break;
+                    case 2:
+                        System.out.println(currMember.getName() + "'s First Chest Measurement: " + currMember.firstAssessment().getChest());
+                        System.out.println(currMember.getName() + "'s Current Chest Measurement: " + currMember.latestAssessment().getChest());
+                        break;
 
-                case 3:
-                    System.out.println(currMember.getName() + "'s First Thigh Measurement: " + currMember.firstAssessment().getThigh());
-                    System.out.println(currMember.getName() + "'s Current Thigh Measurement: " + currMember.latestAssessment().getThigh());
-                    break;
+                    case 3:
+                        System.out.println(currMember.getName() + "'s First Thigh Measurement: " + currMember.firstAssessment().getThigh());
+                        System.out.println(currMember.getName() + "'s Current Thigh Measurement: " + currMember.latestAssessment().getThigh());
+                        break;
 
-                case 4:
-                    System.out.println(currMember.getName() + "'s First Arm Measurement: " + currMember.firstAssessment().getUpperArm());
-                    System.out.println(currMember.getName() + "'s Current Arm Measurement: " + currMember.latestAssessment().getUpperArm());
-                    break;
+                    case 4:
+                        System.out.println(currMember.getName() + "'s First Arm Measurement: " + currMember.firstAssessment().getUpperArm());
+                        System.out.println(currMember.getName() + "'s Current Arm Measurement: " + currMember.latestAssessment().getUpperArm());
+                        break;
 
-                case 5:
-                    System.out.println(currMember.getName() + "'s First Waist Measurement: " + currMember.firstAssessment().getWaist());
-                    System.out.println(currMember.getName() + "'s Current Waist Measurement: " + currMember.latestAssessment().getWaist());
-                    break;
+                    case 5:
+                        System.out.println(currMember.getName() + "'s First Waist Measurement: " + currMember.firstAssessment().getWaist());
+                        System.out.println(currMember.getName() + "'s Current Waist Measurement: " + currMember.latestAssessment().getWaist());
+                        break;
 
-                case 6:
-                    System.out.println(currMember.getName() + "'s First Hip Measurement: " + currMember.firstAssessment().getHips());
-                    System.out.println(currMember.getName() + "'s Current Hip Measurement: " + currMember.latestAssessment().getHips());
-                    break;
+                    case 6:
+                        System.out.println(currMember.getName() + "'s First Hip Measurement: " + currMember.firstAssessment().getHips());
+                        System.out.println(currMember.getName() + "'s Current Hip Measurement: " + currMember.latestAssessment().getHips());
+                        break;
 
-                default:
-                    System.out.println("Invalid option entered: " + option);
-                    break;
+                    default:
+                        System.out.println("Invalid option entered: " + option);
+                        break;
+                }
+
+                validNextString("\nPress Enter to return..");
+                sleep();
+                insertLines();
+                option = loginMenu("memberProgress");
             }
-
-            validNextString("\nPress Enter to return..");
-            System.out.println(returnToMenu);
-            sleep();
-
-
-            option = loginMenu("memberProgress");
         }
+        else{
+                System.out.println("No assessments to review");
+        }
+        System.out.println(returnToMenu);
+        sleep();
     }
 
     /**
@@ -847,14 +831,54 @@ public class MenuController
         }
     }
 
+    private void personType(String menuType){
+        insertLines();
+        //A string variable that will be printed to screen depending on the person type
+        String personTitle = "";
+
+        //asking if they're a member or trainer
+        String personType = validNextString("Yo bro! You a Member or a Trainer? (M or T)\n> ");
+        //ensuring what the entered it upper case
+        personType = personType.toUpperCase();
+        //Empty lines to clean out the console display
+        if(personType.equals("M")){
+            personTitle = "MEMBER";
+        }
+        else if(personType.equals("T")){
+            personTitle = "TRAINER";
+        }
+
+        //if they have no entered 'm' or 't' then the user will be brought back to the menu
+        if(!personType.equals("M") && !personType.equals("T")){
+            //Telling the user they messed up
+            System.out.println("Invalid option entered: " + personType +
+                    "\nReturning to Menu.");
+            //give the user time before returning to menu
+            sleep();
+            //clearing the text from the console display
+            insertLines();
+        }
+        else if(menuType.equals("login")){
+            login(personType, personTitle);
+        }
+        else if(menuType.equals("register")){
+            addMember(personType, personTitle);
+        }
+        else{
+            System.out.println("Person Typ Error");
+        }
+    }
+
     /**
      * A method that when called will ask the user to input various details
      * which will be used to create a new Member object
      *
      */
-    private void addMember() {
+    private void addMember(String personType, String personTitle) {
         insertLines();
 
+
+        System.out.println(personTitle + " REGISTER: ");
         System.out.println("Please enter the following member details: ");
         System.out.println(typeExit);
 
@@ -873,7 +897,6 @@ public class MenuController
                 insertLines();
                 return;
             }
-            //TODO http://stackoverflow.com/questions/8204680/java-regex-email/13013056#13013056
             //emails always contain the "@" symbol so this checks to make sure it's in the email
             else if (!memberEmail.contains("@")) {
                 System.out.println("Invalid option entered: " + memberEmail);
@@ -894,20 +917,6 @@ public class MenuController
             //The name that will be tested and added to a new member object if it proves valid
             memberName = validNextString("Name:\n> ");
 
-            //a boolean that will have it's flag raised should anything other than letters is detected
-            //in the user entered variable
-            boolean numsDetected = false;
-
-            //a for loop that will go through each index of the entered string and check if it's a letter or a space
-            //if it detects a character is neither a letter or a space then it will set numsDetected to true and break
-            //from the loop
-            for (int i = 0; i < memberName.length(); i++) {
-                if (!Character.isLetter(memberName.charAt(i)) && memberName.charAt(i) != ' ') {
-                    numsDetected = true;
-                    break;
-                }
-            }
-
             //if the user entered ex then they will be returned to the previous menu
             if (memberName.equalsIgnoreCase("ex")) {
                 System.out.println(returnToMenu);
@@ -915,9 +924,9 @@ public class MenuController
                 insertLines();
                 return;
             }
-            //if numsDetected = true then it will prompt the user with "invalid option entered"
+            //if onlyLetters = true then it will prompt the user with "invalid option entered"
             //and return them to the start of the while loop
-            else if (numsDetected) {
+            else if (onlyLetters(memberName)) {
                 System.out.println("\nInvalid option entered: " + memberName);
                 System.out.println("Please use only letters.\n");
             }
@@ -928,7 +937,7 @@ public class MenuController
         }
 
         //addresses vary and can contain a mix of letters and numbers so this one is left open and without validation
-        memberAddress = validNextString("Address:\n");
+        memberAddress = validNextString("Address:\n> ");
         //incase the user decides to exit at this stage, they have the option to do so
         if(memberAddress.equalsIgnoreCase("ex")){
             return;
@@ -962,121 +971,154 @@ public class MenuController
             }
         }
 
-        //ensures what is entered for the height category is between 1.0 and 3.0
-        //should non-numerical numbers be entered it will be caught by the validNextDouble() method
-        while(true) {
-            height = validNextDouble("Height(between 1 and 3 metres):\n> ");
+        if(personType.equals("M")){
+            //ensures what is entered for the height category is between 1.0 and 3.0
+            //should non-numerical numbers be entered it will be caught by the validNextDouble() method
+            while(true) {
+                height = validNextDouble("Height(between 1 and 3 metres):\n> ");
 
-            //checking to see if the entered height is between 1m and 3m
-            //if so then it will continue onto the next stage
-            if(height >= 1.0 && height <= 3.0) {
-                break;
-            }
-            //if what is entered is not between 1.0-3.0 then it will return this prompt before
-            //returning to the start of the loop
-            else {
-                System.out.println("\nInvalid option entered: " + height);
-                System.out.println("Please ensure height is between 1-3m.\n");
-            }
-        }
-
-        //ensures what is entered for the weight category is between 35 and 250
-        //should non-numerical numbers be entered it will be caught by the validNextDouble() method
-        while(true) {
-            startingWeight = validNextDouble("Starting Weight(between 35kg and 250kg):\n");
-
-            //checking to see if the entered height is between 1m and 3m
-            //if so then it will continue onto the next stage
-            if(startingWeight >= 35 && startingWeight <= 250) {
-                break;
-            }
-            //if what is entered is not between 1.0-3.0 then it will return this prompt before
-            //returning to the start of the loop
-            else {
-                System.out.println("\nInvalid option entered: " + startingWeight);
-                System.out.println("Please ensure weight is between 35-250kg.\n> ");
-            }
-        }
-
-        //ensures what is entered is either a premium or student package
-        while(true){
-
-            System.out.println("Available Packages: Premium or Student");
-            chosenPackage = validNextString("Choose a package(P/S):\n> ");
-            chosenPackage = chosenPackage.toUpperCase();
-
-            //if the user entered ex then they will be returned to the previous menu
-            if(chosenPackage.equalsIgnoreCase("ex")){
-                return;
-            }
-            //if user enters P it will save chosenPackage as PREMIUM before breaking the loop
-            else if(chosenPackage.equals("P")){
-                chosenPackage = "PREMIUM";
-                break;
-            }
-            //if user enters S it will save chosenPackage as STUDENT before breaking the loop
-            else if(chosenPackage.equals("S")){
-                chosenPackage = "STUDENT";
-                break;
-            }
-            //if the user input equals PREMIUM or STUDENT then it will break the loop
-            else if(chosenPackage.equals("PREMIUM") || chosenPackage.equals("STUDENT")){
-                break;
-            }
-            //if what is entered is not PREMIUM, STUDENT, P or S then it will return this prompt before
-            //returning to the start of the loop
-            else {
-                System.out.println("\nInvalid option entered: " + chosenPackage);
-                System.out.println("Please chose between (Premium) or (Student).\n");
-            }
-        }
-
-        if(chosenPackage.contains("STUDENT")){
-
-            //while loop to ensure a valid student id is entered
-            while(true){
-
-                //stored the entered integer
-                memberStudentID = validNextInt("Student ID (100000 - 999999):\n> ");
-
-                //ensure the entered integer is between 100000 - 999999
-                if(memberStudentID >= 100000 && memberStudentID <= 999999 ){
+                //checking to see if the entered height is between 1m and 3m
+                //if so then it will continue onto the next stage
+                if(height >= 1.0 && height <= 3.0) {
                     break;
                 }
-                //if it's not then it will display this prompt to screen before returning to the start of the loop
+                //if what is entered is not between 1.0-3.0 then it will return this prompt before
+                //returning to the start of the loop
                 else {
-                    System.out.println("\nInvalid option entered: " + memberStudentID);
-                    System.out.println("Please chose between 100000 - 999999.\n");
+                    System.out.println("\nInvalid option entered: " + height);
+                    System.out.println("Please ensure height is between 1-3m.\n> ");
                 }
             }
 
-            //a while loop to ensure memberCollege contains only letters and spaces
+            //ensures what is entered for the weight category is between 35 and 250
+            //should non-numerical numbers be entered it will be caught by the validNextDouble() method
+            while(true) {
+                startingWeight = validNextDouble("Starting Weight(between 35kg and 250kg):\n");
+
+                //checking to see if the entered height is between 1m and 3m
+                //if so then it will continue onto the next stage
+                if(startingWeight >= 35 && startingWeight <= 250) {
+                    break;
+                }
+                //if what is entered is not between 1.0-3.0 then it will return this prompt before
+                //returning to the start of the loop
+                else {
+                    System.out.println("\nInvalid option entered: " + startingWeight);
+                    System.out.println("Please ensure weight is between 35-250kg.\n> ");
+                }
+            }
+
+            //ensures what is entered is either a premium or student package
             while(true){
 
-                memberCollege = validNextString("College:\n> ");
+                chosenPackage = validNextString("Choose a Package: Premium(P) or Student(S):\n> ");
+                chosenPackage = chosenPackage.toUpperCase();
 
-                //a boolean that will have it's flag raised should anything other than letters is detected
-                //in the user entered variable
-                boolean numsDetected = false;
+                //if the user entered ex then they will be returned to the previous menu
+                if(chosenPackage.equalsIgnoreCase("ex")){
+                    return;
+                }
+                //if user enters P it will save chosenPackage as PREMIUM before breaking the loop
+                else if(chosenPackage.equals("P")){
+                    chosenPackage = "PREMIUM";
+                    break;
+                }
+                //if user enters S it will save chosenPackage as STUDENT before breaking the loop
+                else if(chosenPackage.equals("S")){
+                    chosenPackage = "STUDENT";
+                    break;
+                }
+                //if the user input equals PREMIUM or STUDENT then it will break the loop
+                else if(chosenPackage.equals("PREMIUM") || chosenPackage.equals("STUDENT")){
+                    break;
+                }
+                //if what is entered is not PREMIUM, STUDENT, P or S then it will return this prompt before
+                //returning to the start of the loop
+                else {
+                    System.out.println("\nInvalid option entered: " + chosenPackage);
+                    System.out.println("Please chose between (Premium) or (Student).\n");
+                }
+            }
 
-                //a for loop that will go through each index of the entered string and check if it's a letter or a space
-                //if it detects a character is neither a letter or a space then it will set numsDetected to true and break
-                //from the loop
-                for (int i = 0; i < memberCollege.length(); i++) {
-                    if (!Character.isLetter(memberCollege.charAt(i)) && memberCollege.charAt(i) != ' ') {
-                        numsDetected = true;
+            if(chosenPackage.equals("STUDENT")){
+
+                //while loop to ensure a valid student id is entered
+                while(true){
+
+                    //stored the entered integer
+                    memberStudentID = validNextInt("Student ID (100000 - 999999):\n> ");
+
+                    //ensure the entered integer is between 100000 - 999999
+                    if(memberStudentID >= 100000 && memberStudentID <= 999999 ){
                         break;
+                    }
+                    //if it's not then it will display this prompt to screen before returning to the start of the loop
+                    else {
+                        System.out.println("\nInvalid option entered: " + memberStudentID);
+                        System.out.println("Please chose between 100000 - 999999.\n");
                     }
                 }
 
+                //a while loop to ensure memberCollege contains only letters and spaces
+                while(true){
+
+                    memberCollege = validNextString("College:\n> ");
+
+                    //if the user entered ex then they will be returned to the previous menu
+                    if (memberCollege.equalsIgnoreCase("ex")) {
+                        return;
+                    }
+                    //if onlyLetters = true then it will prompt the user with "invalid option entered"
+                    //and return them to the start of the while loop
+                    else if (onlyLetters(memberCollege)) {
+                        System.out.println("\nInvalid option entered: " + memberCollege);
+                        System.out.println("Please use only letters.\n");
+                    }
+                    //Should the entered college name passes the above tests then the user can move forward
+                    else {
+                        break;
+                    }
+                }
+                //a student member object is now created and entered into the members array
+                gymApi.addMember(new StudentMember(memberEmail, memberName, memberAddress, gender, height,
+                        startingWeight, chosenPackage, memberStudentID, memberCollege));
+
+            }
+            else if (chosenPackage.equals("PREMIUM")){
+                //a premium member object is added to the members array
+                gymApi.addMember(new PremiumMember(memberEmail, memberName, memberAddress, gender, height,
+                        startingWeight, chosenPackage));
+
+            }
+            //this gets the name from the most recently entered member and says that it was added successfully
+            //this is done so that if the wrong name appears this will help indicate an error
+            if(gymApi.getMembers().get(gymApi.numberOfMembers() - 1).getName().equals(memberName)){
+                System.out.println(memberName +" is successfully added");
+                //give the user reading time before returning to menu
+                sleep();
+                //clears the console of the above text
+                insertLines();
+
+            }
+            else{
+                System.out.println("Add Member Error.");
+                //give the user reading time before returning to menu
+                sleep();
+            }
+        }
+        else if(personType.equals("T")){
+
+            String speciality;
+            while(true){
+                speciality = validNextString("Trainer Speciality:\n> ");
                 //if the user entered ex then they will be returned to the previous menu
-                if (memberCollege.equalsIgnoreCase("ex")) {
+                if (speciality.equalsIgnoreCase("ex")) {
                     return;
                 }
-                //if numsDetected = true then it will prompt the user with "invalid option entered"
+                //if onlyLetters = true then it will prompt the user with "invalid option entered"
                 //and return them to the start of the while loop
-                else if (numsDetected) {
-                    System.out.println("\nInvalid option entered: " + memberCollege);
+                else if (onlyLetters(speciality)) {
+                    System.out.println("\nInvalid option entered: " + speciality);
                     System.out.println("Please use only letters.\n");
                 }
                 //Should the entered college name passes the above tests then the user can move forward
@@ -1084,40 +1126,47 @@ public class MenuController
                     break;
                 }
             }
-            //a student member object is now created and entered into the members array
-            gymApi.addMember(new StudentMember(memberEmail, memberName, memberAddress, gender, height,
-                    startingWeight, chosenPackage, memberStudentID, memberCollege));
-
+            gymApi.addTrainer((new Trainer(memberEmail, memberName, memberAddress, gender, speciality)));
             //this gets the name from the most recently entered member and says that it was added successfully
             //this is done so that if the wrong name appears this will help indicate an error
-            System.out.println("" + gymApi.getMembers().get(gymApi.numberOfMembers() - 1).getName() +" Student Member is successfully added");
+            if(gymApi.getMembers().get(gymApi.numberOfMembers() - 1).getName().equals(memberName)){
+                System.out.println(memberName +" is successfully added");
+                //give the user reading time before returning to menu
+                sleep();
+                //clears the console of the above text
+                insertLines();
 
-            //give the user reading time before returning to menu
-            sleep();
-            //clears the console of the above text
-            insertLines();
+            }
+            else{
+                System.out.println("Add Trainer Error.");
+                //give the user reading time before returning to menu
+                sleep();
+            }
+
         }
 
-        else if (chosenPackage.contains("PREMIUM")){
-            //a premium member object is added to the members array
-            gymApi.addMember(new PremiumMember(memberEmail, memberName, memberAddress, gender, height,
-                    startingWeight, chosenPackage));
+    }
 
-            //this gets the name from the most recently entered member and says that it was added successfully
-            //this is done so that if the wrong name appears this will help indicate an error
-            System.out.println("" + gymApi.getMembers().get(gymApi.numberOfMembers() - 1).getName() +" Premium Member is successfully added");
+    /**
+     * A boolean used by the AddMember() method to ensure a string contains only letters and spaces
+     * @param checkThis the string to be checked
+     * @return A boolean value that will confirm or deny the existance of non alphabetical characters
+     */
+    private boolean onlyLetters(String checkThis){
+        //a boolean that will have it's flag raised should anything other than letters is detected
+        //in the user entered variable
+        boolean numsDetected = false;
 
-            //give the user reading time before returning to menu
-            sleep();
-            //clears the console of the above text
-            insertLines();
+        //a for loop that will go through each index of the entered string and check if it's a letter or a space
+        //if it detects a character is neither a letter or a space then it will set numsDetected to true and break
+        //from the loop
+        for (int i = 0; i < checkThis.length(); i++) {
+            if (!Character.isLetter(checkThis.charAt(i)) && checkThis.charAt(i) != ' ') {
+                numsDetected = true;
+                break;
+            }
         }
-        else{
-            System.out.println("Add Member Error.");
-            //give the user reading time before returning to menu
-            sleep();
-            //clears the console of the above text
-        }
+        return numsDetected;
     }
 
     /**
