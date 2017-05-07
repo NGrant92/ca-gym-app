@@ -1,9 +1,16 @@
 package controllers;
 
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.io.xml.DomDriver;
 import models.*;
 import utils.Analytics;
+import utils.SaveManager;
 import utils.ScannerInput;
 
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -17,17 +24,23 @@ public class GymApi {
 
     public ArrayList<Member> members;
     public ArrayList<Trainer> trainers;
+    private SaveManager saveManager = new SaveManager();
 
     public GymApi(){
 
         members = new ArrayList<>();
         trainers = new ArrayList<>();
+        try {
+            load();
+        }
+        catch (Exception e) {
+            System.out.print(e.toString());
+        }
 
+        //members.add(new PremiumMember("test1@tmail.com", "Niall", "Waterford", "M", 1.75, 66, "PREMIUM"));
+        //trainers.add(new Trainer("test2@tmail.com", "NDog", "Waterford", "M", "Skipping leg day"));
 
-        members.add(new PremiumMember("test1@tmail.com", "Niall", "Waterford", "M", 1.75, 66, "PREMIUM"));
-        trainers.add(new Trainer("test2@tmail.com", "NDog", "Waterford", "M", "Skipping leg day"));
-
-        addAssessment(0);
+        //addAssessment(0);
 
     }
 
@@ -46,6 +59,26 @@ public class GymApi {
     public void addMember(Member member){
 
         members.add(member);
+        try {
+            save();
+        }
+        catch (Exception e) {
+            System.out.print(e.toString());
+        }
+    }
+
+    /**
+     * Removes a member class to the members array
+     * @param member Adds a member class to the members array
+     */
+    public void removeMember(Member member){
+        members.remove(member);
+        try {
+            save();
+        }
+        catch (Exception e) {
+            System.out.print(e.toString());
+        }
     }
 
     /**
@@ -55,6 +88,12 @@ public class GymApi {
     public void addTrainer(Trainer trainer){
 
         trainers.add(trainer);
+        try {
+            save();
+        }
+        catch (Exception e) {
+            System.out.print(e.toString());
+        }
     }
 
     /**
@@ -289,9 +328,11 @@ public class GymApi {
 
         if(this.members.size() > 0 && idealMember.equals("")) {
             return "There are no members in the gym with an ideal weight";
-        } else if(this.members.size() == 0) {
+        }
+        else if(this.members.size() == 0) {
             return "There are no members in the gym";
-        } else {
+        }
+        else {
             return idealMember;
         }
     }
@@ -364,5 +405,33 @@ public class GymApi {
         else {
             return listBMI;
         }
+    }
+
+    /**
+     * Saves the current game state to xml by utilising the SaveManager class
+     * @throws Exception message
+     */
+    private void save() throws Exception{
+        saveManager.setState(trainers, members);
+
+        XStream xstream = new XStream(new DomDriver());
+        ObjectOutputStream out = xstream.createObjectOutputStream(new FileWriter("gym.xml"));
+        out.writeObject(saveManager);
+        out.close();
+    }
+
+    /**
+     * Loads the game from a SaveManager object
+     * @throws Exception message
+     */
+    @SuppressWarnings ("unchecked")
+    private void load() throws Exception{
+        XStream xstream = new XStream(new DomDriver());
+        ObjectInputStream is = xstream.createObjectInputStream(new FileReader("gym.xml"));
+        saveManager = (SaveManager) is.readObject();
+        is.close();
+        trainers = saveManager.getTrainers();
+        members = saveManager.getMembers();
+
     }
 }

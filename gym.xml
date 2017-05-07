@@ -1,0 +1,50 @@
+<object-stream>
+  <utils.SaveManager>
+    <trainers>
+      <models.Trainer>
+        <email>test2@tmail.com</email>
+        <name>NDog</name>
+        <address>Waterford</address>
+        <gender>M</gender>
+        <speciality>Skipping leg day</speciality>
+      </models.Trainer>
+    </trainers>
+    <members>
+      <models.PremiumMember>
+        <email>test1@tmail.com</email>
+        <name>Niall</name>
+        <address>Waterford</address>
+        <gender>M</gender>
+        <height>1.75</height>
+        <startingWeight>66.0</startingWeight>
+        <chosenPackage>PREMIUM</chosenPackage>
+        <trainerAssessment>
+          <entry>
+            <date>2017-05-07 12:24:38.331 UTC</date>
+            <models.Assessment>
+              <weight>77.0</weight>
+              <chest>55.0</chest>
+              <thigh>34.0</thigh>
+              <upperArm>15.0</upperArm>
+              <waist>24.0</waist>
+              <hips>10.0</hips>
+              <comment>Keep up the good work</comment>
+              <trainer reference="../../../../../../trainers/models.Trainer"/>
+            </models.Assessment>
+          </entry>
+        </trainerAssessment>
+      </models.PremiumMember>
+      <models.PremiumMember>
+        <email>test3@tmail.com</email>
+        <name>The Rock</name>
+        <address>Hollywood</address>
+        <gender>M</gender>
+        <height>2.9</height>
+        <startingWeight>120.0</startingWeight>
+        <chosenPackage>PREMIUM</chosenPackage>
+        <trainerAssessment/>
+      </models.PremiumMember>
+    </members>
+    <currentTurn>0</currentTurn>
+  </utils.SaveManager>
+</object-stream>

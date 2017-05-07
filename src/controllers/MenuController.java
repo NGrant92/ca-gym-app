@@ -176,9 +176,9 @@ public class MenuController
                 profileChoices = " 1) Add New Member\n" +
                         " 2) List All Members\n" +
                         " 3) Search For Member By Email\n" +
-                        " 4) Search For Member By Name\n" +
+                        " 4) Search For Member By Name\n\n" +
                         " 5) List Members By Ideal Body Weight - NOT FIN -\n" +
-                        " 6) List Members With A Specific BMI - NOT FIN -\n" +
+                        " 6) List Members With A Specific BMI - NOT FIN -\n\n" +
                         " 7) Assessment Sub-Menu\n" +
                         " 8) Reports Sub-Menu\n\n" +
                         " 0) Return to Main Menu";
@@ -213,8 +213,7 @@ public class MenuController
 
         System.out.println("Enter the number for the action you wish to take:");
         System.out.println("\n" + profileChoices + "\n");
-        int option = validNextInt("> ");
-        return option;
+        return validNextInt("> ");
     }
 
 
@@ -639,9 +638,7 @@ public class MenuController
         }
         System.out.println(" 8) PACKAGE TYPE");
         System.out.println("\n 0) Exit");
-        int updateOption = validNextInt("\n> ");
-
-        return updateOption;
+        return validNextInt("\n> ");
     }
     /**
      * A method when called will ask the user if which member feature they wish to update
@@ -781,14 +778,14 @@ public class MenuController
 
                     //A new Premium Member object is added to Members array. Parameters from currentMember is used to fill
                     //the parameters for the new PremiumMember object
-                    gymApi.getMembers().add(new PremiumMember(currMember.getEmail(), currMember.getName(), currMember.getAddress(),
+                    gymApi.addMember(new PremiumMember(currMember.getEmail(), currMember.getName(), currMember.getAddress(),
                             currMember.getGender(), currMember.getHeight(), currMember.getWeight(), "PREMIUM"));
 
                     //The hash map of assessments from currMember are added the the new PremiumMember obejct
                     gymApi.getMembers().get(gymApi.getMembers().size() - 1).addAllAssessments(currMember.getAssessments());
 
                     //currMember is deleted
-                    gymApi.getMembers().remove(currMember);
+                    gymApi.removeMember(currMember);
 
                     //user is prompted
                     System.out.println("Package successfully changed.\nReturning to Main Menu");
