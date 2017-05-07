@@ -3,6 +3,7 @@ package controllers;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 import models.*;
+import utils.Analytics;
 
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -25,6 +26,7 @@ public class MenuController
     private GymApi gymApi = new GymApi();
     private String typeExit = "ex) Exit";
     private String returnToMenu = "Returning to Previous Menu...";
+    private String invalidOption = "Invalid Option Entered: ";
 
     public static void main(String[] args)
     {
@@ -81,7 +83,7 @@ public class MenuController
                     break;
 
                 default:
-                    System.out.println("Invalid option entered: " + option);
+                    System.out.println(invalidOption + option);
                     break;
             }
 
@@ -118,7 +120,7 @@ public class MenuController
         }
         //if neither turn out to be true the user will be returned to menu
         else {
-            System.out.println("Invalid Email entered: " + personEmail +
+            System.out.println(invalidOption + personEmail +
                     "\nReturning to Menu.");
             //Program is paused for 3.5 seconds to allow reading time
             sleep();
@@ -153,8 +155,8 @@ public class MenuController
                         " 2) List All Members\n" +
                         " 3) Search For Member By Email\n" +
                         " 4) Search For Member By Name\n\n" +
-                        " 5) List Members By Ideal Body Weight - NOT FIN -\n" +
-                        " 6) List Members With A Specific BMI - NOT FIN -\n\n" +
+                        " 5) List Members By Ideal Body Weight\n" +
+                        " 6) List Members With A Specific BMI\n\n" +
                         " 7) Assessment Sub-Menu\n" +
                         " 8) Reports Sub-Menu\n\n" +
                         " 0) Return to Main Menu";
@@ -232,7 +234,7 @@ public class MenuController
                     break;
 
                 default:
-                    System.out.println("Invalid option entered: " + option);
+                    System.out.println(invalidOption + option);
                     break;
             }
 
@@ -316,11 +318,23 @@ public class MenuController
 
                 case 5:
                     //List members with ideal body weight;
+                    System.out.println(gymApi.listMembersWithIdealWeight());
+                    validNextString("Press Enter to return..");
+                    System.out.println(returnToMenu);
+                    sleep();
+                    insertLines();
                     break;
 
 
                 case 6:
                     // List members with a specific BMI category;
+                    System.out.println("VERY SERVERELY UNDERWEIGHT, SEVERELY UNDERWEIGHT, UNDERWEIGHT\nNORMAL\nOVERWEIGHT, ODERATELY OBESE, SEVERELY OBESE, VERY SEVERELY OBESE\n\n");
+                    String category = validNextString("Please Enter the Desired Category:\n> ");
+                    System.out.println(gymApi.listBySpecificBMICategory(category));
+                    validNextString("Press Enter to return..");
+                    System.out.println(returnToMenu);
+                    sleep();
+                    insertLines();
                     break;
 
 
@@ -336,7 +350,7 @@ public class MenuController
                     break;
 
                 default:
-                    System.out.println("Invalid option entered: " + option);
+                    System.out.println(invalidOption + option);
                     break;
             }
 
@@ -386,7 +400,7 @@ public class MenuController
                         break;
 
                     default:
-                        System.out.println("Invalid option entered: " + option);
+                        System.out.println(invalidOption + option);
                         break;
                 }
 
@@ -450,7 +464,7 @@ public class MenuController
                     break;
 
                 default:
-                    System.out.println("Invalid option entered: " + option);
+                    System.out.println(invalidOption + option);
                     break;
             }
             option = loginMenu("trainerAssessmentMenu");
@@ -504,7 +518,7 @@ public class MenuController
                     break;
 
                 default:
-                    System.out.println("Invalid option entered: " + option);
+                    System.out.println(invalidOption + option);
                     break;
             }
 
@@ -543,7 +557,7 @@ public class MenuController
             //if what is entered is not between 1.0-3.0 then it will return this prompt before
             //returning to the start of the loop
             else {
-                System.out.println("\nInvalid option entered: " + weight);
+                System.out.println("\n" + invalidOption + weight);
                 System.out.println("Please ensure weight is between 35-250kg.\n");
             }
         }
@@ -569,7 +583,7 @@ public class MenuController
         }
         else{
             //if the latest assessment comment doesn't match what the user entered it will return an error message
-            System.out.println("add Assessment Error");
+            System.out.println("Add Assessment Error");
             sleep();
         }
     }
@@ -746,12 +760,13 @@ public class MenuController
                     //prompted with a message if they don't match
                     else{
                         System.out.println("Update College Error: " + college);
+                        System.out.println("Please ensure only letters are used.");
                         sleep();
                     }
                 }
                 //if user is not a student then they will be prompted with this message
                 else{
-                    System.out.println("Invalid option entered: " + updateOption);
+                    System.out.println(invalidOption + updateOption);
                     sleep();
                 }
                 break;
@@ -806,7 +821,7 @@ public class MenuController
                 }
                 //if they enter something other than S or T
                 else if (!packageOption.equalsIgnoreCase("s") && !packageOption.equalsIgnoreCase("p")){
-                    System.out.println("Invalid option entered: " + packageOption);
+                    System.out.println(invalidOption + packageOption);
                     sleep();
                     insertLines();
                     break;
@@ -851,8 +866,7 @@ public class MenuController
         //if they have no entered 'm' or 't' then the user will be brought back to the menu
         if(!personType.equals("M") && !personType.equals("T")){
             //Telling the user they messed up
-            System.out.println("Invalid option entered: " + personType +
-                    "\nReturning to Menu.");
+            System.out.println("Invalid option entered: " + personType + "\nReturning to Menu.");
             //give the user time before returning to menu
             sleep();
             //clearing the text from the console display
@@ -899,12 +913,12 @@ public class MenuController
             }
             //emails always contain the "@" symbol so this checks to make sure it's in the email
             else if (!memberEmail.contains("@")) {
-                System.out.println("Invalid option entered: " + memberEmail);
+                System.out.println(invalidOption + memberEmail);
             }
             //If the entered email is found in either the members array or the trainers array then
             // it will output a message saying so before looping back and asking for an email again
             else if (gymApi.searchMembersByEmail(memberEmail) != null || gymApi.searchTrainersByEmail(memberEmail) != null) {
-                System.out.println("Email already exists: " + memberEmail);
+                System.out.println(invalidOption + memberEmail);
             }
             //Should the entered email pass the above tests then the user can move forward onto the member's name
             else {
@@ -962,7 +976,7 @@ public class MenuController
             //if they enter in a single character that isn't M or F then it will prompt the user pointing out the error
             //and will loop back and ask them to enter the member's gender
             else if (!gender.equals("M") && !gender.equals("F")) {
-                System.out.println("\nInvalid option entered: " + gender);
+                System.out.println("\n" + invalidOption + gender);
                 System.out.println("Please enter either M/F.\n");
             }
             //Should the entered email pass the above tests then the user can move forward onto the member's name
@@ -985,7 +999,7 @@ public class MenuController
                 //if what is entered is not between 1.0-3.0 then it will return this prompt before
                 //returning to the start of the loop
                 else {
-                    System.out.println("\nInvalid option entered: " + height);
+                    System.out.println("\n" + invalidOption + height);
                     System.out.println("Please ensure height is between 1-3m.\n> ");
                 }
             }
@@ -1003,7 +1017,7 @@ public class MenuController
                 //if what is entered is not between 1.0-3.0 then it will return this prompt before
                 //returning to the start of the loop
                 else {
-                    System.out.println("\nInvalid option entered: " + startingWeight);
+                    System.out.println("\n" + invalidOption  + startingWeight);
                     System.out.println("Please ensure weight is between 35-250kg.\n> ");
                 }
             }
@@ -1035,7 +1049,7 @@ public class MenuController
                 //if what is entered is not PREMIUM, STUDENT, P or S then it will return this prompt before
                 //returning to the start of the loop
                 else {
-                    System.out.println("\nInvalid option entered: " + chosenPackage);
+                    System.out.println("\n" + invalidOption  + chosenPackage);
                     System.out.println("Please chose between (Premium) or (Student).\n");
                 }
             }
@@ -1054,7 +1068,7 @@ public class MenuController
                     }
                     //if it's not then it will display this prompt to screen before returning to the start of the loop
                     else {
-                        System.out.println("\nInvalid option entered: " + memberStudentID);
+                        System.out.println("\n" + invalidOption  + memberStudentID);
                         System.out.println("Please chose between 100000 - 999999.\n");
                     }
                 }
@@ -1071,7 +1085,7 @@ public class MenuController
                     //if onlyLetters = true then it will prompt the user with "invalid option entered"
                     //and return them to the start of the while loop
                     else if (onlyLetters(memberCollege)) {
-                        System.out.println("\nInvalid option entered: " + memberCollege);
+                        System.out.println("\n" + invalidOption  + memberCollege);
                         System.out.println("Please use only letters.\n");
                     }
                     //Should the entered college name passes the above tests then the user can move forward
@@ -1118,7 +1132,7 @@ public class MenuController
                 //if onlyLetters = true then it will prompt the user with "invalid option entered"
                 //and return them to the start of the while loop
                 else if (onlyLetters(speciality)) {
-                    System.out.println("\nInvalid option entered: " + speciality);
+                    System.out.println("\n" + invalidOption  + speciality);
                     System.out.println("Please use only letters.\n");
                 }
                 //Should the entered college name passes the above tests then the user can move forward
@@ -1142,9 +1156,7 @@ public class MenuController
                 //give the user reading time before returning to menu
                 sleep();
             }
-
         }
-
     }
 
     /**

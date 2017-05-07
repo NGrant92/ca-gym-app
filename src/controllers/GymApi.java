@@ -320,7 +320,7 @@ public class GymApi {
 
         while(var2.hasNext()) {
             Member member = (Member)var2.next();
-            if(Analytics.isIdealBodyWeight(member, member.latestAssessment())) {
+            if(member.getAssessments().size() > 0 && Analytics.isIdealBodyWeight(member, member.latestAssessment())) {
                 idealMember = idealMember + member.toString() + "\n";
             }
         }
@@ -373,7 +373,7 @@ public class GymApi {
         category = category.toUpperCase();
         //loops through the members array to search for people who match the entered category
         for (Member member : members) {
-            if (Analytics.determineBMICategory(Analytics.calculateBMI(member, member.latestAssessment())).contains(category)) {
+            if (member.getAssessments().size() > 0 && Analytics.determineBMICategory(Analytics.calculateBMI(member, member.latestAssessment())).contains(category)) {
                 listBMI += member.toString() + "\n";
             }
         }
@@ -389,14 +389,14 @@ public class GymApi {
             if(category.contains("UNDERWEIGHT")){
                 response = "No toothpicks in this gym bro!";
             }
-            else if (category.contains("OBESE")){
+            else if (category.contains("OBESE") || category.contains("OVERWEIGHT")){
                 response = "In this gym obesity is extinct! Good work dude!";
             }
             else if (category.contains("NORMAL")){
                 response = "No body has normal BMI? Are you running a gym or a spa bro? Get back to work!";
             }
             else{
-                response = "No one by that category!";
+                response = "No one by that category!" + category;
             }
             return response;
         }
