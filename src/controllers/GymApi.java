@@ -24,7 +24,7 @@ public class GymApi {
 
     public ArrayList<Member> members;
     public ArrayList<Trainer> trainers;
-    private SaveManager saveManager = new SaveManager();
+    public SaveManager saveManager = new SaveManager();
 
     public GymApi(){
 
@@ -44,6 +44,9 @@ public class GymApi {
 
     }
 
+    private void bootUp(){
+
+    }
 
     public void addAssessment(int i){
         Assessment test = new Assessment(66, 55, 34, 15, 24, 10, "Keep up the good work", trainers.get(i));

@@ -45,6 +45,5 @@
         <trainerAssessment/>
       </models.PremiumMember>
     </members>
-    <currentTurn>0</currentTurn>
   </utils.SaveManager>
 </object-stream>

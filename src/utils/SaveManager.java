@@ -6,12 +6,12 @@ import models.Trainer;
 import java.util.ArrayList;
 
 /**
+ * SaveManager is used to save and load both Trainers and Members arrays
  * Created by niall on 07/05/17.
  */
 public class SaveManager {
     private ArrayList<Trainer> trainers;
     private ArrayList<Member> members;
-    private int currentTurn;
 
     /**
      * Sets the trainers array and players array into the SaveManager object
