@@ -282,6 +282,7 @@ public class MenuController
                     //Lists out all the registered members
                     insertLines();
                     System.out.println(gymApi.listMembers());
+                    validNextString("Press Enter to return..");
                     System.out.println(returnToMenu);
                     sleep();
                     insertLines();
@@ -321,6 +322,7 @@ public class MenuController
                     //if memSearch is not null the addAssessment() method will be run
                     if(!foundName.equals("")){
                         System.out.println(foundName);
+                        validNextString("Press Enter to return..");
                         System.out.println(returnToMenu);
                         sleep();
                         insertLines();

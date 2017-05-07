@@ -44,10 +44,6 @@ public class GymApi {
 
     }
 
-    private void bootUp(){
-
-    }
-
     public void addAssessment(int i){
         Assessment test = new Assessment(66, 55, 34, 15, 24, 10, "Keep up the good work", trainers.get(i));
         members.get(i).addAssessment(test);
@@ -267,7 +263,7 @@ public class GymApi {
         if(members.size() > 0){
             for(Member member : members){
 
-                membersToString += member.toString() + "\n";
+                membersToString += member.toString() + "\n\n+----------------------+\n";
             }
             return membersToString;
         }
@@ -433,8 +429,8 @@ public class GymApi {
         ObjectInputStream is = xstream.createObjectInputStream(new FileReader("gym.xml"));
         saveManager = (SaveManager) is.readObject();
         is.close();
-        trainers = saveManager.getTrainers();
-        members = saveManager.getMembers();
+        this.trainers = saveManager.getTrainers();
+        this.members = saveManager.getMembers();
 
     }
 }

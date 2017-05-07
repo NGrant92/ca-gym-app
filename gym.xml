@@ -44,6 +44,16 @@
         <chosenPackage>PREMIUM</chosenPackage>
         <trainerAssessment/>
       </models.PremiumMember>
+      <models.PremiumMember>
+        <email>test4@tmail.com</email>
+        <name>Arnold</name>
+        <address>Austria</address>
+        <gender>M</gender>
+        <height>2.0</height>
+        <startingWeight>100.0</startingWeight>
+        <chosenPackage>PREMIUM</chosenPackage>
+        <trainerAssessment/>
+      </models.PremiumMember>
     </members>
   </utils.SaveManager>
 </object-stream>

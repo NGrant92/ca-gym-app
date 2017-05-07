@@ -30,11 +30,16 @@ public class PremiumMember extends Member{
      */
     @Override
     public String toString() {
+        String latestAssessment = "No Assessments";
+        if(getAssessments().size() > 0){
+            latestAssessment = latestAssessment().toString();
+        }
+
         return  "NAME..........." + getName() + "\n" +
                 "EMAIL.........." + getEmail() + "\n" +
                 "GENDER........." + getGender() + "\n" +
                 "HEIGHT........." + getHeight() + "\n" +
                 "START WEIGHT..." + getWeight() + "\n\n" +
-                "LATEST ASSESSMENT:" + "\n" + latestAssessment();
+                "LATEST ASSESSMENT:" + "\n" + latestAssessment;
     }
 }
