@@ -161,10 +161,57 @@ public abstract class Member extends Person{
      * Returns the first assessment based on the first entry (by calendar date).
      * @return Returns the first assessment based on the first entry (by calendar date).
      */
-    public Assessment firstAssessment(){
+    public String progressAssessment(String option)
+    {
+        String assessProgress = "";
 
-        return trainerAssessment.get(sortedAssessmentDates().first());
+        switch(option){
+            case "weight":
+                for (Date date : sortedAssessmentDates())
+                {
+                    assessProgress += "\n" + date + "\n" + trainerAssessment.get(date).getWeight() + "kg";
+                }
+                assessProgress = "\n" + "Starting Weight:\n" + getWeight() + "kg" + assessProgress;
+                break;
 
+            case "chest":
+                for (Date date : sortedAssessmentDates())
+                {
+                    assessProgress += "\n" + date + "\n" + trainerAssessment.get(date).getChest() + "cm";
+                }
+                break;
+
+            case "thigh":
+                for (Date date : sortedAssessmentDates())
+                {
+                    assessProgress += "\n" + date + "\n" + trainerAssessment.get(date).getThigh() + "cm";
+                }
+                break;
+
+            case "upperArm":
+                for (Date date : sortedAssessmentDates())
+                {
+                    assessProgress += "\n" + date + "\n" + trainerAssessment.get(date).getUpperArm() + "cm";
+                }
+                break;
+
+            case "waist":
+                for (Date date : sortedAssessmentDates())
+                {
+                    assessProgress += "\n" + date + "\n" + trainerAssessment.get(date).getWaist() + "cm";
+                }
+                break;
+
+            case "hips":
+                for (Date date : sortedAssessmentDates())
+                {
+                    assessProgress += "\n" + date + "\n" + trainerAssessment.get(date).getHips() + "cm";
+                }
+                break;
+
+        }
+
+        return assessProgress;
     }
 
     /**

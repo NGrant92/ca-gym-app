@@ -1,81 +1,37 @@
 <object-stream>
-  <utils.SaveManager>
-    <trainers>
-      <models.Trainer>
-        <email>test2@tmail.com</email>
-        <name>NDog</name>
-        <address>Waterford</address>
-        <gender>M</gender>
-        <speciality>Skipping leg day</speciality>
-      </models.Trainer>
-    </trainers>
+  <controllers.GymApi>
     <members>
-      <models.PremiumMember>
+      <models.StudentMember>
         <email>test1@tmail.com</email>
         <name>Niall</name>
         <address>Waterford</address>
         <gender>M</gender>
         <height>1.75</height>
         <startingWeight>66.0</startingWeight>
-        <chosenPackage>PREMIUM</chosenPackage>
-        <trainerAssessment>
-          <entry>
-            <date>2017-05-07 12:24:38.331 UTC</date>
-            <models.Assessment>
-              <weight>77.0</weight>
-              <chest>55.0</chest>
-              <thigh>34.0</thigh>
-              <upperArm>15.0</upperArm>
-              <waist>24.0</waist>
-              <hips>10.0</hips>
-              <comment>Keep up the good work</comment>
-              <trainer reference="../../../../../../trainers/models.Trainer"/>
-            </models.Assessment>
-          </entry>
-        </trainerAssessment>
-      </models.PremiumMember>
+        <chosenPackage>STUDENT</chosenPackage>
+        <trainerAssessment/>
+        <studentId>123456</studentId>
+        <collegeName>WIT</collegeName>
+      </models.StudentMember>
       <models.PremiumMember>
-        <email>test3@tmail.com</email>
-        <name>The Rock</name>
-        <address>Hollywood</address>
+        <email>t1000@tmail.com</email>
+        <name>Arnold</name>
+        <address>Austria</address>
         <gender>M</gender>
-        <height>2.9</height>
+        <height>2.1</height>
         <startingWeight>120.0</startingWeight>
         <chosenPackage>PREMIUM</chosenPackage>
         <trainerAssessment/>
       </models.PremiumMember>
-      <models.PremiumMember>
-        <email>test4@tmail.com</email>
-        <name>Arnold</name>
-        <address>Austria</address>
-        <gender>M</gender>
-        <height>2.0</height>
-        <startingWeight>100.0</startingWeight>
-        <chosenPackage>PREMIUM</chosenPackage>
-        <trainerAssessment/>
-      </models.PremiumMember>
-      <models.PremiumMember>
-        <email>test5@tmail.com</email>
-        <name>Wade Wilson</name>
-        <address>Canada</address>
-        <gender>M</gender>
-        <height>2.1</height>
-        <startingWeight>77.0</startingWeight>
-        <chosenPackage>PREMIUM</chosenPackage>
-        <trainerAssessment/>
-      </models.PremiumMember>
-      <models.StudentMember>
-        <email>t1000@tmail.com</email>
-        <name>Arnold Swarchz</name>
-        <address>California</address>
-        <gender>M</gender>
-        <height>2.0</height>
-        <startingWeight>180.0</startingWeight>
-        <chosenPackage>STUDENT</chosenPackage>
-        <trainerAssessment/>
-        <studentId>123456</studentId>
-        <collegeName>Robotics UI</collegeName>
-      </models.StudentMember>
     </members>
-  </utils.SaveManager>
+    <trainers>
+      <models.Trainer>
+        <email>trainer1@tmail.com</email>
+        <name>NDog</name>
+        <address>The Gym</address>
+        <gender>M</gender>
+        <speciality>Skipping leg day</speciality>
+      </models.Trainer>
+    </trainers>
+  </controllers.GymApi>
 </object-stream>

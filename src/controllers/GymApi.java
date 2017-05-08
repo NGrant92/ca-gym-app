@@ -1,19 +1,9 @@
 package controllers;
 
-import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.io.xml.DomDriver;
 import models.*;
 import utils.Analytics;
-import utils.SaveManager;
-import utils.ScannerInput;
 
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.Iterator;
 
 
@@ -22,34 +12,8 @@ import java.util.Iterator;
  */
 public class GymApi {
 
-    public ArrayList<Member> members;
-    public ArrayList<Trainer> trainers;
-    public SaveManager saveManager = new SaveManager();
-
-    public GymApi(){
-
-        members = new ArrayList<>();
-        trainers = new ArrayList<>();
-        try {
-            load();
-        }
-        catch (Exception e) {
-            System.out.print(e.toString());
-        }
-
-        //members.add(new PremiumMember("test1@tmail.com", "Niall", "Waterford", "M", 1.75, 66, "PREMIUM"));
-        //trainers.add(new Trainer("test2@tmail.com", "NDog", "Waterford", "M", "Skipping leg day"));
-
-        //addAssessment(0);
-
-    }
-
-    public void addAssessment(int i){
-        Assessment test = new Assessment(66, 55, 34, 15, 24, 10, "Keep up the good work", trainers.get(i));
-        members.get(i).addAssessment(test);
-        Assessment test2 = new Assessment(77, 55, 34, 15, 24, 10, "Keep up the good work", trainers.get(i));
-        members.get(i).addAssessment(test2);
-    }
+    public ArrayList<Member> members = new ArrayList<>();
+    public ArrayList<Trainer> trainers = new ArrayList<>();
 
     /**
      * Adds a member class to the members array
@@ -58,12 +22,6 @@ public class GymApi {
     public void addMember(Member member){
 
         members.add(member);
-        try {
-            save();
-        }
-        catch (Exception e) {
-            System.out.print(e.toString());
-        }
     }
 
     /**
@@ -72,12 +30,6 @@ public class GymApi {
      */
     public void removeMember(Member member){
         members.remove(member);
-        try {
-            save();
-        }
-        catch (Exception e) {
-            System.out.print(e.toString());
-        }
     }
 
     /**
@@ -87,12 +39,6 @@ public class GymApi {
     public void addTrainer(Trainer trainer){
 
         trainers.add(trainer);
-        try {
-            save();
-        }
-        catch (Exception e) {
-            System.out.print(e.toString());
-        }
     }
 
     /**
@@ -406,31 +352,5 @@ public class GymApi {
         }
     }
 
-    /**
-     * Saves the current game state to xml by utilising the SaveManager class
-     * @throws Exception message
-     */
-    public void save() throws Exception{
-        saveManager.setState(trainers, members);
 
-        XStream xstream = new XStream(new DomDriver());
-        ObjectOutputStream out = xstream.createObjectOutputStream(new FileWriter("gym.xml"));
-        out.writeObject(saveManager);
-        out.close();
-    }
-
-    /**
-     * Loads the game from a SaveManager object
-     * @throws Exception message
-     */
-    @SuppressWarnings ("unchecked")
-    private void load() throws Exception{
-        XStream xstream = new XStream(new DomDriver());
-        ObjectInputStream is = xstream.createObjectInputStream(new FileReader("gym.xml"));
-        saveManager = (SaveManager) is.readObject();
-        is.close();
-        this.trainers = saveManager.getTrainers();
-        this.members = saveManager.getMembers();
-
-    }
 }

@@ -3,13 +3,11 @@ package controllers;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 import models.*;
-import utils.Analytics;
 
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.regex.Matcher;
@@ -41,6 +39,13 @@ public class MenuController
     }
 
     private MenuController(){
+
+        try {
+            load();
+        }
+        catch (Exception e) {
+            System.out.print(e.toString());
+        }
 
         runMenu();
     }
@@ -87,8 +92,17 @@ public class MenuController
                     //register a person
                     //User is asked if they wish to register a Member or a Trainer
                     personType("register");
+                    try {
+                        save();
+                    }
+                    catch (Exception e) {
+                        System.out.print(e.toString());
+                    }
                     break;
 
+                case "a":
+                    memberProgress(gymApi.members.get(0));
+                    break;
                 default:
                     System.out.println(invalidOption + option);
                     break;
@@ -228,7 +242,7 @@ public class MenuController
                     //Update Profile;
                     updateMember(currMember);
                     try {
-                        gymApi.save();
+                        save();
                     }
                     catch (Exception e) {
                         System.out.print(e.toString());
@@ -270,6 +284,12 @@ public class MenuController
                 case 1:
                     //Adds a member to the members array
                     addMember("M", "MEMBER");
+                    try {
+                        save();
+                    }
+                    catch (Exception e) {
+                        System.out.print(e.toString());
+                    }
                     break;
 
                 case 2:
@@ -386,33 +406,27 @@ public class MenuController
             while(option != 0) {
                 switch (option) {
                     case 1:
-                        System.out.println(currMember.getName() + "'s Starting Weight: " + currMember.getWeight());
-                        System.out.println(currMember.getName() + "'s Current Weight: " + currMember.latestAssessment().getWeight());
+                        System.out.println(currMember.progressAssessment("weight"));
                         break;
 
                     case 2:
-                        System.out.println(currMember.getName() + "'s First Chest Measurement: " + currMember.firstAssessment().getChest());
-                        System.out.println(currMember.getName() + "'s Current Chest Measurement: " + currMember.latestAssessment().getChest());
+                        System.out.println(currMember.progressAssessment("chest"));
                         break;
 
                     case 3:
-                        System.out.println(currMember.getName() + "'s First Thigh Measurement: " + currMember.firstAssessment().getThigh());
-                        System.out.println(currMember.getName() + "'s Current Thigh Measurement: " + currMember.latestAssessment().getThigh());
+                        System.out.println(currMember.progressAssessment("thigh"));
                         break;
 
                     case 4:
-                        System.out.println(currMember.getName() + "'s First Arm Measurement: " + currMember.firstAssessment().getUpperArm());
-                        System.out.println(currMember.getName() + "'s Current Arm Measurement: " + currMember.latestAssessment().getUpperArm());
+                        System.out.println(currMember.progressAssessment("upperArm"));
                         break;
 
                     case 5:
-                        System.out.println(currMember.getName() + "'s First Waist Measurement: " + currMember.firstAssessment().getWaist());
-                        System.out.println(currMember.getName() + "'s Current Waist Measurement: " + currMember.latestAssessment().getWaist());
+                        System.out.println(currMember.progressAssessment("waist"));
                         break;
 
                     case 6:
-                        System.out.println(currMember.getName() + "'s First Hip Measurement: " + currMember.firstAssessment().getHips());
-                        System.out.println(currMember.getName() + "'s Current Hip Measurement: " + currMember.latestAssessment().getHips());
+                        System.out.println(currMember.progressAssessment("hips"));
                         break;
 
                     default:
@@ -454,6 +468,12 @@ public class MenuController
                     //if memSearch is not null the addAssessment() method will be run
                     if( foundMem != null){
                         addAssessment(currTrainer, foundMem);
+                        try {
+                            save();
+                        }
+                        catch (Exception e) {
+                            System.out.print(e.toString());
+                        }
                     }
                     //If no matching email is found then the user is told so
                     else{
@@ -472,6 +492,12 @@ public class MenuController
                     //if memSearch is not null the updateAssessment() method will be run
                     if(memSearch != null){
                         updateAssessment(currTrainer, memSearch);
+                        try {
+                            save();
+                        }
+                        catch (Exception e) {
+                            System.out.print(e.toString());
+                        }
                     }
                     //If no matching email is found then the user is told so
                     else{
@@ -1149,21 +1175,11 @@ public class MenuController
                         startingWeight, chosenPackage));
 
             }
-            //this gets the name from the most recently entered member and says that it was added successfully
-            //this is done so that if the wrong name appears this will help indicate an error
-            if(gymApi.getMembers().get(gymApi.numberOfMembers() - 1).getName().equals(memberName)){
-                System.out.println(memberName +" is successfully added");
-                //give the user reading time before returning to menu
-                sleep();
-                //clears the console of the above text
-                insertLines();
-
-            }
-            else{
-                System.out.println("Add Member Error.");
-                //give the user reading time before returning to menu
-                sleep();
-            }
+            System.out.println(memberName +" is successfully added");
+            //give the user reading time before returning to menu
+            sleep();
+            //clears the console of the above text
+            insertLines();
         }
         else if(personType.equals("T")){
 
@@ -1186,21 +1202,11 @@ public class MenuController
                 }
             }
             gymApi.addTrainer((new Trainer(memberEmail, memberName, memberAddress, gender, speciality)));
-            //this gets the name from the most recently entered member and says that it was added successfully
-            //this is done so that if the wrong name appears this will help indicate an error
-            if(gymApi.getMembers().get(gymApi.numberOfMembers() - 1).getName().equals(memberName)){
-                System.out.println(memberName +" is successfully added");
-                //give the user reading time before returning to menu
-                sleep();
-                //clears the console of the above text
-                insertLines();
-
-            }
-            else{
-                System.out.println("Add Trainer Error.");
-                //give the user reading time before returning to menu
-                sleep();
-            }
+            System.out.println(memberName +" is successfully added");
+            //give the user reading time before returning to menu
+            sleep();
+            //clears the console of the above text
+            insertLines();
         }
     }
 
@@ -1295,5 +1301,29 @@ public class MenuController
         } catch (Exception e) {
             System.out.println(e.toString());
         }
+    }
+
+    /**
+     * Saves the current game state to xml by utilising the SaveManager class
+     * @throws Exception message
+     */
+    public void save() throws Exception{
+
+        XStream xstream = new XStream(new DomDriver());
+        ObjectOutputStream out = xstream.createObjectOutputStream(new FileWriter("gym.xml"));
+        out.writeObject(gymApi);
+        out.close();
+    }
+
+    /**
+     * Loads the game from a SaveManager object
+     * @throws Exception message
+     */
+    @SuppressWarnings ("unchecked")
+    private void load() throws Exception{
+        XStream xstream = new XStream(new DomDriver());
+        ObjectInputStream is = xstream.createObjectInputStream(new FileReader("gym.xml"));
+        gymApi = (GymApi) is.readObject();
+        is.close();
     }
 }
