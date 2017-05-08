@@ -193,16 +193,10 @@ public abstract class Member extends Person{
     */
     @Override
     public String toString() {
-        String latestAssessment = "No Assessments";
-        if(trainerAssessment.size() > 0){
-            latestAssessment = latestAssessment().toString();
-        }
-
         return  "NAME..........." + getName() + "\n" +
                 "EMAIL.........." + getEmail() + "\n" +
                 "GENDER........." + getGender() + "\n" +
                 "HEIGHT........." + getHeight() + "\n" +
-                "START WEIGHT..." + getWeight() + "\n\n" +
-                "LATEST ASSESSMENT:" + "\n" + latestAssessment;
+                "START WEIGHT..." + getWeight() + "\n\n";
     }
 }

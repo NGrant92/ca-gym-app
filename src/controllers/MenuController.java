@@ -9,8 +9,11 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static utils.ScannerInput.*;
 
@@ -27,6 +30,10 @@ public class MenuController
     private String typeExit = "ex) Exit";
     private String returnToMenu = "Returning to Previous Menu...";
     private String invalidOption = "Invalid Option Entered: ";
+    //REFERENCE: http://stackoverflow.com/questions/8204680/java-regex-email/13013056#13013056
+    private static final Pattern VALID_EMAIL_ADDRESS_REGEX =
+            Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
+
 
     public static void main(String[] args)
     {
@@ -180,8 +187,8 @@ public class MenuController
 
             case "trainerReportsMenu":
                 profileChoices = " 1) Specific member progress (via email search)\n" +
-                        " 2) Specific member progress (via name search) - NOT FIN -\n" +
-                        " 3) Overall members’ report - NOT FIN -\n\n" +
+                        " 2) Specific member progress (via name search)\n" +
+                        " 3) Overall members’ report\n\n" +
                         " 0) Return to Previous Menu";
                 break;
 
@@ -208,6 +215,9 @@ public class MenuController
                     //View Profile
                     insertLines();
                     System.out.println(currMember.toString());
+                    if(currMember.getAssessments().size() > 0){
+                        System.out.println("\nLATEST ASSESSMENT:\n" + currMember.latestAssessment());
+                    }
                     validNextString("Press Enter to return..");
                     System.out.println(returnToMenu);
                     sleep();
@@ -217,6 +227,12 @@ public class MenuController
                 case 2:
                     //Update Profile;
                     updateMember(currMember);
+                    try {
+                        gymApi.save();
+                    }
+                    catch (Exception e) {
+                        System.out.print(e.toString());
+                    }
                     //if a member updates their package they will have to be brought back to main menu to relog
                     //if they're not logged out then they can make duplicates of themselves
                     //if the last member in the array has the same email but not the same package, they're logged out
@@ -328,7 +344,7 @@ public class MenuController
 
                 case 6:
                     // List members with a specific BMI category;
-                    System.out.println("VERY SERVERELY UNDERWEIGHT, SEVERELY UNDERWEIGHT, UNDERWEIGHT\nNORMAL\nOVERWEIGHT, ODERATELY OBESE, SEVERELY OBESE, VERY SEVERELY OBESE\n\n");
+                    System.out.println("VERY SERVERELY UNDERWEIGHT, SEVERELY UNDERWEIGHT, UNDERWEIGHT\nNORMAL, OVERWEIGHT\n ODERATELY OBESE, SEVERELY OBESE, VERY SEVERELY OBESE\n\n");
                     String category = validNextString("Please Enter the Desired Category:\n> ");
                     System.out.println(gymApi.listBySpecificBMICategory(category));
                     validNextString("Press Enter to return..");
@@ -471,6 +487,8 @@ public class MenuController
         }
     }
 
+
+
     /**
      * A sub menu that is exclusive to the trainer. It allows the trainer
      * to check up on a member's progress. They can access the information
@@ -497,25 +515,42 @@ public class MenuController
                     break;
 
                 case 2:
-                    /**
                     //Specific member progress (via name search). Note: brings the user to memberProgress()
-                    String memName = validNextString("Member's Name:\n> ");
-                    //Storing the searchMembersByEmail() results into a member variable
-                    Member memSearch = gymApi.searchMembersByName(memName);
-                    //testing to see if searchMembersByEmail returned a valid member
-                    //if so then it will call the memberProgress() method
-                    if(memSearch != null){
-                        memberProgress(memSearch);
+                    Member nameSearch = memberNameSearch();
+                    if(nameSearch != null){
+                        memberProgress(nameSearch);
                     }
                     else{
-                        System.out.println("Invalid Name: " + memEmail);
+                        System.out.println(returnToMenu);
+                        sleep();
                     }
                     break;
-                     */
 
                 case 3:
-                    //Overall members’ report;
-                    break;
+                    //Overall members’ report
+                    //prints out all members and their latest assessments
+                    if(gymApi.numberOfMembers() > 0){
+                        //String to store members and their assessments
+                        String membersToString = "";
+                        //for each loop
+                        for(Member member : gymApi.getMembers()){
+                            String assessment;
+                            //if member has assessments it will print their latest one
+                            if(member.getAssessments().size() > 0){
+                                assessment = "LATEST ASSESSMENT:" + "\n" + member.latestAssessment().toString();
+                            }
+                            else{
+                                assessment = "No Assessments";
+                            }
+                            membersToString += member.toString() + assessment +"\n\n+----------------------+\n";
+                        }
+                        System.out.println(membersToString);
+
+                        validNextString("Press Enter to Continue...");
+                        System.out.println(returnToMenu);
+                        sleep();
+                        break;
+                    }
 
                 default:
                     System.out.println(invalidOption + option);
@@ -660,20 +695,24 @@ public class MenuController
                 }
                 //if not it will prompt user with this message
                 else{
-                    System.out.println("Update Name Error: " + name);
+                    System.out.println(invalidOption + name);
                 }
                 break;
 
             case 2:
                 String email = validNextString("Enter new Email:\n> ");
-                currMember.setEmail(email);
-                if(currMember.getEmail().equals(email)){
+
+                //Checking to make sure the email has the appropriate characters and doesn't exist belong to other members or trainers
+                if(validateEmail(email) && gymApi.searchMembersByEmail(email) == null && gymApi.searchTrainersByEmail(email) == null){
+                    currMember.setEmail(email);
                     System.out.println("Update Successful");
                 }
                 //if not it will prompt user with this message
                 else{
-                    System.out.println("Update Email Error: " + email);
+                    System.out.println(invalidOption + email);
+
                 }
+                sleep();
                 break;
 
             case 3:
@@ -684,7 +723,8 @@ public class MenuController
                 }
                 //if not it will prompt user with this message
                 else{
-                    System.out.println("Update Gender Error: " + gender);
+                    System.out.println(invalidOption + gender);
+                    System.out.println("Please make sure it's M/F");
                     sleep();
                 }
                 break;
@@ -698,6 +738,7 @@ public class MenuController
                 //if not it will prompt user with this message
                 else{
                     System.out.println("Update Height Error: " + height);
+                    System.out.println("Please make sure it's between 1 - 3m");
                     sleep();
                 }
                 break;
@@ -711,6 +752,7 @@ public class MenuController
                 //if not it will prompt user with this message
                 else{
                     System.out.println("Update Weight Error: " + weight);
+
                     sleep();
                 }
                 break;
@@ -822,17 +864,15 @@ public class MenuController
                 //if they enter something other than S or T
                 else if (!packageOption.equalsIgnoreCase("s") && !packageOption.equalsIgnoreCase("p")){
                     System.out.println(invalidOption + packageOption);
-                    sleep();
-                    insertLines();
-                    break;
                 }
                 //if user is already the same type they're trying to become
                 else{
                     System.out.println("You are already of that member type.");
-                    sleep();
-                    insertLines();
-                    break;
+
                 }
+                sleep();
+                insertLines();
+                break;
 
             case 0:
                 System.out.println(returnToMenu);
@@ -846,6 +886,11 @@ public class MenuController
         }
     }
 
+    /**
+     * A method used by the register and login sections of the main menu
+     * This will allow the login and register methods know what to show to the user
+     * @param menuType Indicates wheter the user is logging in or registering
+     */
     private void personType(String menuType){
         insertLines();
         //A string variable that will be printed to screen depending on the person type
@@ -911,14 +956,14 @@ public class MenuController
                 insertLines();
                 return;
             }
-            //emails always contain the "@" symbol so this checks to make sure it's in the email
-            else if (!memberEmail.contains("@")) {
+            //emails always contain certain symbols so this checks to make sure they are in the email
+            else if (!validateEmail(memberEmail)) {
                 System.out.println(invalidOption + memberEmail);
             }
             //If the entered email is found in either the members array or the trainers array then
             // it will output a message saying so before looping back and asking for an email again
             else if (gymApi.searchMembersByEmail(memberEmail) != null || gymApi.searchTrainersByEmail(memberEmail) != null) {
-                System.out.println(invalidOption + memberEmail);
+                System.out.println("Email Already Exists: " + memberEmail);
             }
             //Should the entered email pass the above tests then the user can move forward onto the member's name
             else {
@@ -1007,7 +1052,7 @@ public class MenuController
             //ensures what is entered for the weight category is between 35 and 250
             //should non-numerical numbers be entered it will be caught by the validNextDouble() method
             while(true) {
-                startingWeight = validNextDouble("Starting Weight(between 35kg and 250kg):\n");
+                startingWeight = validNextDouble("Starting Weight(between 35kg and 250kg):\n> ");
 
                 //checking to see if the entered height is between 1m and 3m
                 //if so then it will continue onto the next stage
@@ -1160,6 +1205,46 @@ public class MenuController
     }
 
     /**
+     * A method search to enable the user to search for members by their names
+     * @return The member object
+     */
+    private Member memberNameSearch(){
+        //asks user for input
+        String memName = validNextString("Member Name: ");
+        //stores search results in this string which will be tested later
+        String memSearch = gymApi.searchMembersByName(memName);
+        //Prints out search results
+        System.out.println(memSearch);
+        //If 0 results or 1 result is not found then it will ask the user to input a number that
+        if(!memSearch.substring(0, 1).equals("0") && !memSearch.substring(0, 1).equals("1")){
+            int index = validNextInt("Enter the number of the member you wish to view:\n> ");
+            if(gymApi.isValidMemberIndex(index) && gymApi.getMembers().get(index).getName().toLowerCase().contains(memName.toLowerCase())){
+                return gymApi.getMembers().get(index);
+            }
+            else{
+                System.out.println(invalidOption + index);
+                return null;
+            }
+
+        }
+        //if there's only 1 search result it will find what the name of the member the user entered and return the member object
+        else if(memSearch.substring(0, 1).equals("1")){
+
+            Member foundmem = null;
+            for(Member member : gymApi.getMembers()) {
+                if(member.getName().toLowerCase().contains(memName.toLowerCase())){
+                    foundmem = member;
+                    break;
+                }
+            }
+            return foundmem;
+        }
+        else {
+            return null;
+        }
+    }
+
+    /**
      * A boolean used by the AddMember() method to ensure a string contains only letters and spaces
      * @param checkThis the string to be checked
      * @return A boolean value that will confirm or deny the existance of non alphabetical characters
@@ -1182,7 +1267,18 @@ public class MenuController
     }
 
     /**
-     * Prints out blank lines to stop a player reading the previous turn
+     * REFERENCE: http://stackoverflow.com/questions/8204680/java-regex-email/13013056#13013056
+     * A method is verify an entered email contains the appropriate syntax
+     * @param email The user entered email
+     * @return A true or false statement
+     */
+    private static boolean validateEmail(String email){
+        Matcher matcher = VALID_EMAIL_ADDRESS_REGEX.matcher(email);
+        return matcher.find();
+    }
+
+    /**
+     * Prints out blank lines to clear the console of the previous text
      */
     private void insertLines() {
         for (int clear = 0; clear < 25; clear++) {

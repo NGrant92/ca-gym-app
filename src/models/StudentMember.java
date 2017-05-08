@@ -72,17 +72,12 @@ public class StudentMember extends Member {
      */
     @Override
     public String toString() {
-        String latestAssessment = "No Assessments";
-        if(getAssessments().size() > 0){
-            latestAssessment = latestAssessment().toString();
-        }
         return  "NAME..........." + getName() + "\n" +
                 "EMAIL.........." + getEmail() + "\n" +
                 "STUDENT ID....." + getStudentId() + "\n" +
                 "COLLEGE........" + getCollegeName() + "\n" +
                 "GENDER........." + getGender() + "\n" +
                 "HEIGHT........." + getHeight() + "\n" +
-                "START WEIGHT..." + getWeight() + "\n\n" +
-                "LATEST ASSESSMENT:" + "\n" + latestAssessment;
+                "START WEIGHT..." + getWeight() + "\n\n";
     }
 }

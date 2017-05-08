@@ -100,13 +100,13 @@ public class Analytics {
             }
         }
         else if(member.getGender().equals("M")){
-            idealWeight = 50 + (2.3 * (heightInches-60));
+            idealWeight = 50 + (2.3 * (heightInches - 60));
         }
         else if (member.getGender().equals("F")){
-            idealWeight = 45.5 + (2.3 * (heightInches-60));
+            idealWeight = 45.5 + (2.3 * (heightInches - 60));
         }
 
-        if(idealWeight >= (assessment.getWeight()-2) && idealWeight <= (assessment.getWeight()+2)){
+        if(idealWeight >= (assessment.getWeight() - 2) && idealWeight <= (assessment.getWeight()+2)){
             return true;
         }
         else{

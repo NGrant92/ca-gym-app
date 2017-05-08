@@ -136,7 +136,7 @@ public class GymApi {
      * @return A boolean to determine if the index is valid
      */
     public boolean isValidMemberIndex(int index){
-        if(index < (members.size())){
+        if(index >= 0 && index < (members.size())){
             return true;
         }
         else{
@@ -151,7 +151,7 @@ public class GymApi {
      * @return A boolean to determine if the index is valid
      */
     public boolean isValidTrainerIndex(int index){
-        if(index < (trainers.size())){
+        if(index >= 0 && index < (trainers.size())){
             return true;
         }
         else{
@@ -197,25 +197,26 @@ public class GymApi {
         String foundMembers = "";
         int searchCounter = 0;
 
-        for(Member member : members){
+        for(int i = 0 ; isValidMemberIndex(i) ; i++){
 
+            Member member = members.get(i);
             //If the two strings match then the toString() method is called from
             //the member with the matching name and stored in foundMember
             //both strings being tested are set to lower case so the search is not case sensitive
             if(member.getName().toLowerCase().contains(nameEntered.toLowerCase())){
-                foundMembers += "\n" + member.getName();
+                foundMembers += "\n" + i + " " + member.getName();
                 searchCounter++;
             }
         }
 
         //If there are any members found to have a matching name then the results are returned
         if(searchCounter > 0){
-            return "" + searchCounter + " Results found for: " + nameEntered + "\n" + foundMembers + "\n";
+            return searchCounter + " Results found for: " + nameEntered + "\n" + foundMembers + "\n";
         }
 
         //if there are zero members in the members array list then it will return this string
         else if (members.size() == 0 && searchCounter == 0){
-            return "No members in this gym bro! Drop those weights, pick up those leaflets and get out there dude!";
+            return searchCounter + " members in this gym bro! Drop those weights, pick up those leaflets and get out there dude!";
         }
 
         //If there are memebers in the members array but no matches found then it will return this string
@@ -262,8 +263,7 @@ public class GymApi {
         //adding all the information from each member object into a string that will be returned
         if(members.size() > 0){
             for(Member member : members){
-
-                membersToString += member.toString() + "\n\n+----------------------+\n";
+                membersToString += member.toString() + "\n+----------------------+\n";
             }
             return membersToString;
         }
@@ -410,7 +410,7 @@ public class GymApi {
      * Saves the current game state to xml by utilising the SaveManager class
      * @throws Exception message
      */
-    private void save() throws Exception{
+    public void save() throws Exception{
         saveManager.setState(trainers, members);
 
         XStream xstream = new XStream(new DomDriver());

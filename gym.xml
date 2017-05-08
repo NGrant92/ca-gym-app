@@ -64,6 +64,18 @@
         <chosenPackage>PREMIUM</chosenPackage>
         <trainerAssessment/>
       </models.PremiumMember>
+      <models.StudentMember>
+        <email>t1000@tmail.com</email>
+        <name>Arnold Swarchz</name>
+        <address>California</address>
+        <gender>M</gender>
+        <height>2.0</height>
+        <startingWeight>180.0</startingWeight>
+        <chosenPackage>STUDENT</chosenPackage>
+        <trainerAssessment/>
+        <studentId>123456</studentId>
+        <collegeName>Robotics UI</collegeName>
+      </models.StudentMember>
     </members>
   </utils.SaveManager>
 </object-stream>
