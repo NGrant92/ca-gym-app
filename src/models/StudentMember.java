@@ -1,8 +1,5 @@
 package models;
 
-import java.util.Date;
-import java.util.HashMap;
-
 /**
  * A concrete subclass of the Member class that stores studentID and and collegeName
  *
@@ -78,6 +75,6 @@ public class StudentMember extends Member {
                 "COLLEGE........" + getCollegeName() + "\n" +
                 "GENDER........." + getGender() + "\n" +
                 "HEIGHT........." + getHeight() + "\n" +
-                "START WEIGHT..." + getWeight() + "\n\n";
+                "START WEIGHT..." + getWeight();
     }
 }

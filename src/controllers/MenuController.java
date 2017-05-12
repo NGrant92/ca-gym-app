@@ -28,26 +28,28 @@ public class MenuController
     private String typeExit = "ex) Exit";
     private String returnToMenu = "Returning to Previous Menu...";
     private String invalidOption = "Invalid Option Entered: ";
+    private HashMap<String, String> packages = null;
     //REFERENCE: http://stackoverflow.com/questions/8204680/java-regex-email/13013056#13013056
     private static final Pattern VALID_EMAIL_ADDRESS_REGEX =
             Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
 
 
-    public static void main(String[] args)
-    {
+    public static void main(String[] args) {
         new MenuController();
     }
 
     private MenuController(){
 
-        try {
-            load();
-        }
-        catch (Exception e) {
-            System.out.print(e.toString());
-        }
-
         runMenu();
+
+        packages.put("Package 1", "Allowed access anytime to gym.\nFree access to all classes." +
+                "\nAccess to all changing areas including deluxe changing rooms.");
+        packages.put("Package 2", "Allowed access anytime to gym.\n€3 fee for all classes.\n" +
+                "\nAccess to all changing areas including deluxe changing rooms.");
+        packages.put("Package 3", "Allowed access to gym at off-peak times.\n€5 fee for all classes.\n" +
+                "\nNo access to deluxe changing rooms.");
+        packages.put("WIT", "Allowed access to gym during term time.\n€4 fee for all classes.\n" +
+                "\nNo access to deluxe changing rooms.");
     }
 
     /**
@@ -93,7 +95,7 @@ public class MenuController
                     //User is asked if they wish to register a Member or a Trainer
                     personType("register");
                     try {
-                        save();
+                        gymApi.save();
                     }
                     catch (Exception e) {
                         System.out.print(e.toString());
@@ -228,10 +230,7 @@ public class MenuController
                 case 1:
                     //View Profile
                     insertLines();
-                    System.out.println(currMember.toString());
-                    if(currMember.getAssessments().size() > 0){
-                        System.out.println("\nLATEST ASSESSMENT:\n" + currMember.latestAssessment());
-                    }
+                    System.out.println(currMember.toString() + hasLatestAssessments(currMember));
                     validNextString("Press Enter to return..");
                     System.out.println(returnToMenu);
                     sleep();
@@ -242,7 +241,7 @@ public class MenuController
                     //Update Profile;
                     updateMember(currMember);
                     try {
-                        save();
+                        gymApi.save();
                     }
                     catch (Exception e) {
                         System.out.print(e.toString());
@@ -285,7 +284,7 @@ public class MenuController
                     //Adds a member to the members array
                     addMember("M", "MEMBER");
                     try {
-                        save();
+                        gymApi.save();
                     }
                     catch (Exception e) {
                         System.out.print(e.toString());
@@ -459,17 +458,13 @@ public class MenuController
             switch(option){
                 case 1:
                     //Add assessment for member
-                    //asks user to enter an email to be used to searched for
-                    System.out.println("Enter the email of the member you wish to assess.");
-                    //user input is stored to be searched
-                    String addAssessmentSearch = validNextString("\nEmail: ");
-                    //email is searched for and if a member object is found it is stored in the foundMem variable
-                    Member foundMem = gymApi.searchMembersByEmail(addAssessmentSearch);
+                    //name is searched for and if a member object is found it is stored in the foundMem variable
+                    Member foundMem = memberNameSearch();
                     //if memSearch is not null the addAssessment() method will be run
                     if( foundMem != null){
                         addAssessment(currTrainer, foundMem);
                         try {
-                            save();
+                            gymApi.save();
                         }
                         catch (Exception e) {
                             System.out.print(e.toString());
@@ -477,23 +472,19 @@ public class MenuController
                     }
                     //If no matching email is found then the user is told so
                     else{
-                        System.out.println("Invalid Email: " + addAssessmentSearch);
+                        System.out.println(returnToMenu);
                     }
                     break;
 
                 case 2:
                     //Update comment on an assessment for member
-                    //asks user to enter an email to be used to searched for
-                    System.out.println("Enter the email of the member you wish to update");
-                    //user input is stored to be searched
-                    String updateAssessmentSearch = validNextString("\nEmail: ");
-                    //email is searched for and if a member object is found it is stored in the memSearch variable
-                    Member memSearch = gymApi.searchMembersByEmail(updateAssessmentSearch);
+                    //name is searched for and if a member object is found it is stored in the memSearch variable
+                    Member memSearch = memberNameSearch();
                     //if memSearch is not null the updateAssessment() method will be run
-                    if(memSearch != null){
+                    if(memSearch != null && memSearch.getAssessments().size() > 0){
                         updateAssessment(currTrainer, memSearch);
                         try {
-                            save();
+                            gymApi.save();
                         }
                         catch (Exception e) {
                             System.out.print(e.toString());
@@ -501,7 +492,10 @@ public class MenuController
                     }
                     //If no matching email is found then the user is told so
                     else{
-                        System.out.println("Invalid Email: " + updateAssessmentSearch);
+                        if(memSearch.getAssessments().size() == 0){
+                            System.out.println("No Assessments to Update");
+                        }
+                        System.out.println(returnToMenu);
                     }
                     break;
 
@@ -560,15 +554,8 @@ public class MenuController
                         String membersToString = "";
                         //for each loop
                         for(Member member : gymApi.getMembers()){
-                            String assessment;
-                            //if member has assessments it will print their latest one
-                            if(member.getAssessments().size() > 0){
-                                assessment = "LATEST ASSESSMENT:" + "\n" + member.latestAssessment().toString();
-                            }
-                            else{
-                                assessment = "No Assessments";
-                            }
-                            membersToString += member.toString() + assessment +"\n\n+----------------------+\n";
+
+                            membersToString += member.toString() + hasLatestAssessments(member) +"\n\n+----------------------+\n";
                         }
                         System.out.println(membersToString);
 
@@ -600,7 +587,7 @@ public class MenuController
         //Clearing console of useless text
         insertLines();
         //prints member's profile and latest assessment to screen for the user to read if needed
-        System.out.println("MEMBER:\n" + currMember.toString());
+        System.out.println("MEMBER:\n" + currMember.toString() + hasLatestAssessments(currMember));
         System.out.println("\n\nNEW ASSESSMENT:");
         //ensures what is entered for the weight category is between 35 and 250
         //should non-numerical numbers be entered it will be caught by the validNextDouble() method
@@ -1121,7 +1108,7 @@ public class MenuController
                 //returning to the start of the loop
                 else {
                     System.out.println("\n" + invalidOption  + chosenPackage);
-                    System.out.println("Please chose between (Premium) or (Student).\n");
+                    System.out.println("Please choose between (Premium) or (Student).\n");
                 }
             }
 
@@ -1250,6 +1237,17 @@ public class MenuController
         }
     }
 
+    private String hasLatestAssessments(Member currMember){
+        String latestAssessment;
+        if(currMember.getAssessments().size() > 0){
+            latestAssessment = "\n\nLATEST ASSESSMENT: \n"+ currMember.latestAssessment();
+        }
+        else{
+            latestAssessment = "\n\nNo Assessments";
+        }
+        return latestAssessment;
+    }
+
     /**
      * A boolean used by the AddMember() method to ensure a string contains only letters and spaces
      * @param checkThis the string to be checked
@@ -1301,29 +1299,5 @@ public class MenuController
         } catch (Exception e) {
             System.out.println(e.toString());
         }
-    }
-
-    /**
-     * Saves the current game state to xml by utilising the SaveManager class
-     * @throws Exception message
-     */
-    public void save() throws Exception{
-
-        XStream xstream = new XStream(new DomDriver());
-        ObjectOutputStream out = xstream.createObjectOutputStream(new FileWriter("gym.xml"));
-        out.writeObject(gymApi);
-        out.close();
-    }
-
-    /**
-     * Loads the game from a SaveManager object
-     * @throws Exception message
-     */
-    @SuppressWarnings ("unchecked")
-    private void load() throws Exception{
-        XStream xstream = new XStream(new DomDriver());
-        ObjectInputStream is = xstream.createObjectInputStream(new FileReader("gym.xml"));
-        gymApi = (GymApi) is.readObject();
-        is.close();
     }
 }

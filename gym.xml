@@ -1,37 +1,67 @@
 <object-stream>
-  <controllers.GymApi>
-    <members>
-      <models.StudentMember>
-        <email>test1@tmail.com</email>
-        <name>Niall</name>
-        <address>Waterford</address>
-        <gender>M</gender>
-        <height>1.75</height>
-        <startingWeight>66.0</startingWeight>
-        <chosenPackage>STUDENT</chosenPackage>
-        <trainerAssessment/>
-        <studentId>123456</studentId>
-        <collegeName>WIT</collegeName>
-      </models.StudentMember>
-      <models.PremiumMember>
-        <email>t1000@tmail.com</email>
-        <name>Arnold</name>
-        <address>Austria</address>
-        <gender>M</gender>
-        <height>2.1</height>
-        <startingWeight>120.0</startingWeight>
-        <chosenPackage>PREMIUM</chosenPackage>
-        <trainerAssessment/>
-      </models.PremiumMember>
-    </members>
-    <trainers>
-      <models.Trainer>
-        <email>trainer1@tmail.com</email>
-        <name>NDog</name>
-        <address>The Gym</address>
-        <gender>M</gender>
-        <speciality>Skipping leg day</speciality>
-      </models.Trainer>
-    </trainers>
-  </controllers.GymApi>
+  <list>
+    <models.PremiumMember>
+      <email>test1@tmail.com</email>
+      <name>Niall</name>
+      <address>Waterford</address>
+      <gender>M</gender>
+      <height>1.75</height>
+      <startingWeight>66.0</startingWeight>
+      <chosenPackage>PREMIUM</chosenPackage>
+      <trainerAssessment>
+        <entry>
+          <date>2017-05-12 10:25:06.598 UTC</date>
+          <models.Assessment>
+            <weight>77.0</weight>
+            <chest>55.0</chest>
+            <thigh>34.0</thigh>
+            <upperArm>15.0</upperArm>
+            <waist>24.0</waist>
+            <hips>10.0</hips>
+            <comment>Keep up the good work</comment>
+            <trainer>
+              <email>test2@tmail.com</email>
+              <name>NDog</name>
+              <address>Waterford</address>
+              <gender>M</gender>
+              <speciality>Skipping leg day</speciality>
+            </trainer>
+          </models.Assessment>
+        </entry>
+      </trainerAssessment>
+    </models.PremiumMember>
+    <models.PremiumMember>
+      <email>t1000@tmail.com</email>
+      <name>Arnold</name>
+      <address>Austria</address>
+      <gender>M</gender>
+      <height>2.2</height>
+      <startingWeight>120.0</startingWeight>
+      <chosenPackage>PREMIUM</chosenPackage>
+      <trainerAssessment>
+        <entry>
+          <date>2017-05-12 10:31:26.73 UTC</date>
+          <models.Assessment>
+            <weight>135.0</weight>
+            <chest>55.0</chest>
+            <thigh>55.0</thigh>
+            <upperArm>88.0</upperArm>
+            <waist>23.0</waist>
+            <hips>10.0</hips>
+            <comment>Terminating those weights</comment>
+            <trainer reference="../../../../../models.PremiumMember/trainerAssessment/entry/models.Assessment/trainer"/>
+          </models.Assessment>
+        </entry>
+      </trainerAssessment>
+    </models.PremiumMember>
+  </list>
+  <list>
+    <models.Trainer>
+      <email>test2@tmail.com</email>
+      <name>NDog</name>
+      <address>Waterford</address>
+      <gender>M</gender>
+      <speciality>Skipping leg day</speciality>
+    </models.Trainer>
+  </list>
 </object-stream>

@@ -1,5 +1,4 @@
 package models;
-import utils.*;
 /**
  *The Assessment class is a concrete class that stores weight, chest, thigh, upperArm, waist, hips,
  * comment and a Trainer that entered the member’s assessment

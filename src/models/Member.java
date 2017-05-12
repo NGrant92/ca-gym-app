@@ -1,12 +1,8 @@
 package models;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+
 import java.util.*;
 import java.util.Date;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.SortedSet;
 
 /**
@@ -244,6 +240,6 @@ public abstract class Member extends Person{
                 "EMAIL.........." + getEmail() + "\n" +
                 "GENDER........." + getGender() + "\n" +
                 "HEIGHT........." + getHeight() + "\n" +
-                "START WEIGHT..." + getWeight() + "\n\n";
+                "START WEIGHT..." + getWeight();
     }
 }

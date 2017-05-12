@@ -3,6 +3,14 @@ package controllers;
 import models.*;
 import utils.Analytics;
 
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.io.xml.DomDriver;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+
+
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -12,8 +20,27 @@ import java.util.Iterator;
  */
 public class GymApi {
 
-    public ArrayList<Member> members = new ArrayList<>();
-    public ArrayList<Trainer> trainers = new ArrayList<>();
+    public ArrayList<Member> members;
+    public ArrayList<Trainer> trainers;
+
+    public GymApi(){
+        members = new ArrayList<>();
+        trainers = new ArrayList<>();
+
+        try{
+            load();
+        }
+        catch (Exception e){
+            System.out.print(e.toString());
+        }
+
+    }
+    public void addAssessment(int i){
+        Assessment test = new Assessment(66, 55, 34, 15, 24, 10, "Keep up the good work", trainers.get(i));
+        members.get(i).addAssessment(test);
+        Assessment test2 = new Assessment(77, 55, 34, 15, 24, 10, "Keep up the good work", trainers.get(i));
+        members.get(i).addAssessment(test2);
+    }
 
     /**
      * Adds a member class to the members array
@@ -352,5 +379,20 @@ public class GymApi {
         }
     }
 
+    public void save() throws Exception {
+        XStream xstream = new XStream(new DomDriver());
+        ObjectOutputStream out = xstream.createObjectOutputStream(new FileWriter("gym.xml"));
+        out.writeObject(members);
+        out.writeObject(trainers);
+        out.close();
+    }
+
+    public void load() throws Exception {
+        XStream xstream = new XStream(new DomDriver());
+        ObjectInputStream is = xstream.createObjectInputStream(new FileReader("gym.xml"));
+        members = (ArrayList<Member>) is.readObject();
+        trainers = (ArrayList<Trainer>) is.readObject();
+        is.close();
+    }
 
 }

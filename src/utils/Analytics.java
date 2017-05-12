@@ -1,8 +1,6 @@
 package utils;
 
 import models.*;
-import controllers.GymApi;
-import java.util.ArrayList;
 
 /**
  * Created by Niall on 24/04/2017.

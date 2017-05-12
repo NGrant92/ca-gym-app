@@ -1,8 +1,5 @@
 package models;
 
-import java.util.Date;
-import java.util.HashMap;
-
 /**
  * A concrete subclass of Member that holds no additional information
  *
