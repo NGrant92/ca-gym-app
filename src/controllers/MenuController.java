@@ -677,7 +677,7 @@ public class MenuController
     private int updateMenu(Member currMember){
 
         //prints out the member's details for the user to see
-        System.out.println(currMember.toString());
+        System.out.println(currMember.toString() + "\n");
 
         System.out.println("Select the feature you wish to update:");
         System.out.println(" 1) NAME\n 2) EMAIL\n 3) GENDER\n 4) HEIGHT\n 5) SARTING WEIGHT");
