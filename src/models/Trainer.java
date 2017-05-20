@@ -42,8 +42,9 @@ public class Trainer extends Person{
      */
     @Override
     public String toString() {
-        return "Trainer{" +
-                "speciality='" + speciality + '\'' +
-                '}';
+        return "NAME..........." + getName() + "\n" +
+                "EMAIL.........." + getEmail() + "\n" +
+                "GENDER........." + getGender() + "\n" +
+                "SPECIALITY....." + getSpeciality();
     }
 }
