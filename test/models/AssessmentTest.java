@@ -1,21 +1,14 @@
 package models;
 
-import org.jboss.arquillian.container.test.api.Deployment;
-import org.jboss.arquillian.junit.Arquillian;
-import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.asset.EmptyAsset;
-import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
 import static org.junit.Assert.*;
 
 /**
  * Created by niall on 20/05/17.
  */
-
 public class AssessmentTest {
 
     private Assessment assessment1, assessment2, assessment3;
@@ -24,6 +17,7 @@ public class AssessmentTest {
 
     @Before
     public void setUp() throws Exception {
+
         slyStalone = new Trainer("test3@tmail.com", "Sylvester Stalone", "LA", "M", "Boxercise");
         terryCrews = new Trainer("test4@tmail.com", "Terry Crews", "LA", "M", "Powerlifting");
         rhondaRousey = new Trainer("test5@tmail.com", "Rhonda Rousey", "Vegas", "F", "Cardio");
@@ -127,13 +121,6 @@ public class AssessmentTest {
 
     @Test
     public void toString() throws Exception {
-    }
-
-    @Deployment
-    public static JavaArchive createDeployment() {
-        return ShrinkWrap.create(JavaArchive.class)
-                .addClass(Assessment.class)
-                .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
     }
 
 }
