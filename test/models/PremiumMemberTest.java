@@ -103,7 +103,20 @@ public class PremiumMemberTest {
 
     @Test
     public void getAssessments() throws Exception {
-        assertEquals("Package 1", premMember1.getChosenPackage());
+        HashMap<Date, Assessment> hashMap1 = new HashMap<>();
+        hashMap1.put(dateFormat.parse(date1) , assessment1);
+        hashMap1.put(dateFormat.parse(date2) , assessment2);
+        assertEquals(hashMap1, premMember1.getAssessments());
+
+        HashMap<Date, Assessment> hashMap2 = new HashMap<>();
+        hashMap2.put(dateFormat.parse(date3) , assessment3);
+        hashMap2.put(dateFormat.parse(date4) , assessment4);
+        assertEquals(hashMap2, premMember2.getAssessments());
+
+        HashMap<Date, Assessment> hashMap3 = new HashMap<>();
+        hashMap3.put(dateFormat.parse(date5) , assessment5);
+        hashMap3.put(dateFormat.parse(date6) , assessment6);
+        assertEquals(hashMap3, premMember3.getAssessments());
     }
 
     @Test
