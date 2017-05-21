@@ -28,7 +28,6 @@ public class MenuController
     private String typeExit = "ex) Exit";
     private String returnToMenu = "Returning to Previous Menu...";
     private String invalidOption = "Invalid Option Entered: ";
-    private HashMap<String, String> packages = null;
     //REFERENCE: http://stackoverflow.com/questions/8204680/java-regex-email/13013056#13013056
     private static final Pattern VALID_EMAIL_ADDRESS_REGEX =
             Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
@@ -41,15 +40,6 @@ public class MenuController
     private MenuController(){
 
         runMenu();
-
-        packages.put("Package 1", "Allowed access anytime to gym.\nFree access to all classes." +
-                "\nAccess to all changing areas including deluxe changing rooms.");
-        packages.put("Package 2", "Allowed access anytime to gym.\n€3 fee for all classes.\n" +
-                "\nAccess to all changing areas including deluxe changing rooms.");
-        packages.put("Package 3", "Allowed access to gym at off-peak times.\n€5 fee for all classes.\n" +
-                "\nNo access to deluxe changing rooms.");
-        packages.put("WIT", "Allowed access to gym during term time.\n€4 fee for all classes.\n" +
-                "\nNo access to deluxe changing rooms.");
     }
 
     /**

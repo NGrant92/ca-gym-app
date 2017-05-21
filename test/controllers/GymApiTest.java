@@ -19,29 +19,23 @@ import static org.junit.Assert.*;
  */
 public class GymApiTest {
 
-    private StudentMember studentMember1, studentMember2, studentMember3;
-    private PremiumMember premMember1, premMember2, premMember3;
-    private Trainer slyStalone, terryCrews, rhondaRousey;
-    private Assessment assessment1, assessment2, assessment3, assessment4, assessment5, assessment6;
+    private StudentMember studentMember2;
+    private PremiumMember premMember2;
+    private Trainer slyStalone, terryCrews;
+    private Assessment assessment1, assessment2, assessment3, assessment4;
     private SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
     private String date1 = "20/05/2017";
     private String date2 = "21/05/2017";
     private String date3 = "22/05/2017";
     private String date4 = "23/05/2017";
-    private String date5 = "24/05/2017";
-    private String date6 = "25/05/2017";
 
     private GymApi gymApi;
     @Before
     public void setUp() throws Exception {
         gymApi = new GymApi();
 
-        //30 characters long, "m" should become M
-        studentMember1 = new StudentMember("junittest1@tmail.com", "Wolverine with Mutant Friendss", "New York", "m", 3, 250, "STUDENT", 999999, "WIT");
         //31 characters long, maleZ should = unspecified, height and weight = 0, "NOTSTUDENT" = ""
         studentMember2 = new StudentMember("junittest2@tmail.com", "Grog", "Castle Whitestone", "male", 3, 250, "STUDENT", 999999, "Any College");
-         //30 characters long, "m" should become M
-        premMember1 = new PremiumMember("junittest4@tmail.com", "Deadpool 'Merc with the Mouth'", "New York", "m", 3, 250, "PREMIUM");
         //31 characters long, maleZ should = unspecified, height and weight = 0, "NOTPREMUIM" = ""
         premMember2 = new PremiumMember("junittest5@tmail.com", "Percy", "Castle Whitestone", "male", 3, 250, "PREMIUM");
 
@@ -54,24 +48,17 @@ public class GymApiTest {
         assessment3 = new Assessment(13, 23, 33, 43, 53, 63, "Assess3", terryCrews);
         assessment4 = new Assessment(183, 24, 34, 44, 54, 64, "Assess4", terryCrews);
 
-        premMember1.getAssessments().put(dateFormat.parse(date1), assessment1);
-        premMember1.getAssessments().put(dateFormat.parse(date2), assessment2);
         premMember2.getAssessments().put(dateFormat.parse(date1), assessment1);
         premMember2.getAssessments().put(dateFormat.parse(date2), assessment2);
 
-        studentMember1.getAssessments().put(dateFormat.parse(date3), assessment3);
-        studentMember1.getAssessments().put(dateFormat.parse(date4), assessment4);
         studentMember2.getAssessments().put(dateFormat.parse(date3), assessment3);
         studentMember2.getAssessments().put(dateFormat.parse(date4), assessment4);
 
-        gymApi.addMember(studentMember1);
         gymApi.addMember(studentMember2);
-        gymApi.addMember(premMember1);
         gymApi.addMember(premMember2);
 
         gymApi.addTrainer(slyStalone);
         gymApi.addTrainer(terryCrews);
-        gymApi.addTrainer(rhondaRousey);
     }
 
     @After
@@ -182,8 +169,8 @@ public class GymApiTest {
     @Test
     public void searchMembersByEmail() throws Exception {
 
-        assertEquals(studentMember1, gymApi.searchMembersByEmail("junittest1@tmail.com"));
-        assertEquals(premMember1, gymApi.searchMembersByEmail("junittest4@tmail.com"));
+        assertEquals(studentMember2, gymApi.searchMembersByEmail("junittest2@tmail.com"));
+        assertEquals(premMember2, gymApi.searchMembersByEmail("junittest5@tmail.com"));
 
         assertEquals(null, gymApi.searchMembersByEmail("junittest4@tmail.com1234"));
     }
@@ -192,16 +179,16 @@ public class GymApiTest {
     public void searchMembersByName() throws Exception {
 
         gymApi.members.clear();
-        assertEquals("0 members in this gym bro!", gymApi.searchMembersByName("Wolverine with Mutant Friendss"));
+        assertEquals("0 members in this gym bro!", gymApi.searchMembersByName("Grog"));
 
-        gymApi.members.add(studentMember1);
-        gymApi.members.add(premMember1);
+        gymApi.members.add(studentMember2);
+        gymApi.members.add(premMember2);
 
-        assertEquals("1 Results found for: Wolverine with Mutant Friendss\n" +
-                "\n" + "0 Wolverine with Mutant Friendss\n", gymApi.searchMembersByName("Wolverine with Mutant Friendss"));
+        assertEquals("1 Results found for: Grog\n" +
+                "\n" + "0 Grog\n", gymApi.searchMembersByName("Grog"));
 
-        assertEquals("1 Results found for: Deadpool 'Merc with the Mouth'\n" +
-                "\n" + "1 Deadpool 'Merc with the Mouth'\n", gymApi.searchMembersByName("Deadpool 'Merc with the Mouth'"));
+        assertEquals("1 Results found for: Percy\n" +
+                "\n" + "1 Percy\n", gymApi.searchMembersByName("Percy"));
 
         assertEquals("0 Results found for: Nothing at all", gymApi.searchMembersByName("Nothing at all"));
     }
@@ -219,12 +206,12 @@ public class GymApiTest {
 
         gymApi.members.clear();
         assertEquals("No members in this gym bro!", gymApi.listMembers());
-        gymApi.members.add(studentMember1);
-        gymApi.members.add(premMember1);
+        gymApi.members.add(studentMember2);
+        gymApi.members.add(premMember2);
 
 
-        assertEquals(studentMember1.toString() + "\n+----------------------+\n" +
-                premMember1.toString() + "\n+----------------------+\n", gymApi.listMembers());
+        assertEquals(studentMember2.toString() + "\n+----------------------+\n" +
+                premMember2.toString() + "\n+----------------------+\n", gymApi.listMembers());
     }
 
     @Test
