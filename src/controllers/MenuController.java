@@ -1218,7 +1218,6 @@ public class MenuController
                 System.out.println(invalidOption + index);
                 return null;
             }
-
         }
         //if there's only 1 search result it will find what the name of the member the user entered and return the member object
         else if(memSearch.substring(0, 1).equals("1")){

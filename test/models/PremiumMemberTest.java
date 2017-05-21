@@ -11,6 +11,8 @@ import java.util.HashMap;
 import static org.junit.Assert.*;
 
 /**
+ * I was unsure about testing the Person and Member methods in trainer, student and premium classes but I came across this answer and felt
+ * it justified doing so: http://stackoverflow.com/questions/7569444/how-to-test-abstract-class-in-java-with-junit
  * Created by niall on 20/05/17.
  */
 public class PremiumMemberTest {

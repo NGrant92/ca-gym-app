@@ -54,6 +54,16 @@
         </entry>
       </trainerAssessment>
     </models.PremiumMember>
+    <models.PremiumMember>
+      <email>test5@tmail.com</email>
+      <name>Grog Strongjaw</name>
+      <address>Greyskull Keep</address>
+      <gender>M</gender>
+      <height>3.0</height>
+      <startingWeight>250.0</startingWeight>
+      <chosenPackage>PREMIUM</chosenPackage>
+      <trainerAssessment/>
+    </models.PremiumMember>
   </list>
   <list>
     <models.Trainer>

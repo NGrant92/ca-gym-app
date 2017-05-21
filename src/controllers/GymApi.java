@@ -33,16 +33,7 @@ public class GymApi {
         catch (Exception e){
             System.out.print(e.toString());
         }
-
     }
-    /**
-    public void addAssessment(int i){
-        Assessment test = new Assessment(66, 55, 34, 15, 24, 10, "Keep up the good work", trainers.get(i));
-        members.get(i).addAssessment(test);
-        Assessment test2 = new Assessment(77, 55, 34, 15, 24, 10, "Keep up the good work", trainers.get(i));
-        members.get(i).addAssessment(test2);
-    }
-     */
 
     /**
      * Adds a member class to the members array
@@ -191,7 +182,7 @@ public class GymApi {
 
         //if there are zero members in the members array list then it will return this string
         else if (members.size() == 0 && searchCounter == 0){
-            return searchCounter + " members in this gym bro! Drop those weights, pick up those leaflets and get out there dude!";
+            return searchCounter + " members in this gym bro!";
         }
 
         //If there are memebers in the members array but no matches found then it will return this string
@@ -244,7 +235,7 @@ public class GymApi {
         }
         //if there are no members in the members array this string will be returned
         else{
-            return "No members in this gym bro! Drop those weights, pick up those leaflets and get out there dude!";
+            return "No members in this gym bro!";
         }
     }
 
@@ -277,7 +268,7 @@ public class GymApi {
             return memberDetails;
         }
         else {
-            return "No members in this gym bro! Drop those weights, pick up those leaflets and get out there dude!";
+            return "No members in this gym bro!";
         }
     }
 
@@ -300,11 +291,11 @@ public class GymApi {
             }
         }
 
-        if(this.members.size() > 0 && idealMember.equals("")) {
+        if(members.size() > 0 && idealMember.equals("")) {
             return "There are no members in the gym with an ideal weight";
         }
         else if(this.members.size() == 0) {
-            return "There are no members in the gym";
+            return "No members in this gym bro!";
         }
         else {
             return idealMember;
@@ -354,26 +345,12 @@ public class GymApi {
         }
         //this message is returned if there are no members in the members array
         if (members.size() == 0) {
-            return "No members in this gym bro! Drop those weights, pick up those leaflets and get out there dude!";
+            return "No members in this gym bro!";
         }
         //if no matches are found in a populated members array then an appropriate message is returned
         else if (members.size() > 0 && listBMI.equals("")) {
 
-            String response;
-
-            if(category.contains("UNDERWEIGHT")){
-                response = "No toothpicks in this gym bro!";
-            }
-            else if (category.contains("OBESE") || category.contains("OVERWEIGHT")){
-                response = "In this gym obesity is extinct! Good work dude!";
-            }
-            else if (category.contains("NORMAL")){
-                response = "No body has normal BMI? Are you running a gym or a spa bro? Get back to work!";
-            }
-            else{
-                response = "No one by that category!" + category;
-            }
-            return response;
+            return  "No one by that category!: " + category;
         }
         //if matches are found the the results are returned
         else {
