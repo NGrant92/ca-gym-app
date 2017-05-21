@@ -17,7 +17,14 @@ public class StudentMember extends Member {
     public StudentMember(String email, String name, String address, String gender, double height, double startingWeight,
                          String chosenPackage, int studentId, String collegeName) {
         super(email, name, address, gender, height, startingWeight, chosenPackage);
-        this.studentId = studentId;
+
+        if(studentId >= 100000 && studentId <= 999999 ){
+            this.studentId = studentId;
+        }
+        else{
+            this.studentId = 0;
+        }
+
         this.collegeName = collegeName;
 
     }
@@ -25,7 +32,12 @@ public class StudentMember extends Member {
     @Override
     public void chosenPackage(String packageChoice){
 
-        setChosenPackage(packageChoice);
+        if(!collegeName.equalsIgnoreCase("WIT")){
+            setChosenPackage("Package 3");
+        }
+        else{
+            setChosenPackage("WIT");
+        }
     }
 
     /**

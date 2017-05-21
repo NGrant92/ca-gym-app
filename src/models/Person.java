@@ -90,7 +90,7 @@ public abstract class Person {
      */
     public void setEmail(String email) {
         if(email.contains("@")){
-            this.email = email;
+            this.email = email.toLowerCase();
         }
     }
 

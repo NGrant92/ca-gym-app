@@ -35,12 +35,14 @@ public class GymApi {
         }
 
     }
+    /**
     public void addAssessment(int i){
         Assessment test = new Assessment(66, 55, 34, 15, 24, 10, "Keep up the good work", trainers.get(i));
         members.get(i).addAssessment(test);
         Assessment test2 = new Assessment(77, 55, 34, 15, 24, 10, "Keep up the good work", trainers.get(i));
         members.get(i).addAssessment(test2);
     }
+     */
 
     /**
      * Adds a member class to the members array

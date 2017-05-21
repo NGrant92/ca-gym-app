@@ -49,7 +49,8 @@ public abstract class Member extends Person{
             this.startingWeight = 0;
         }
 
-        if(chosenPackage.toUpperCase().equals("PREMIUM") || chosenPackage.toUpperCase().equals("STUDENT")){
+        chosenPackage = chosenPackage.toUpperCase();
+        if(chosenPackage.equals("PREMIUM") || chosenPackage.equals("STUDENT")){
             this.chosenPackage = chosenPackage;
         }
         else {
@@ -123,25 +124,12 @@ public abstract class Member extends Person{
      * @param chosenPackage Updates the member's Chosen Package
      */
     public void setChosenPackage(String chosenPackage) {
-        if(chosenPackage.toUpperCase().equals("PREMIUM") || chosenPackage.toUpperCase().equals("STUDENT")){
             this.chosenPackage = chosenPackage;
-        }
     }
 
     //--------------
     //HELPER METHODS
     //--------------
-
-
-
-    /**
-     * Adds a new assessment to the the member's Assessment HashMap
-     * @param newAssessment The assessment object to be added to the member's assessment HashMap
-     */
-    public void addAssessment(Assessment newAssessment){
-
-        trainerAssessment.put(new Date(), newAssessment);
-    }
 
     /**
      * Returns the latest assessment based on last entry (by calendar date).

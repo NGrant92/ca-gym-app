@@ -310,7 +310,7 @@ public class MenuController
                     String emailSearch = validNextString("Email: ");
                     //email is searched for and if a member object is found it is stored in the foundMem variable
                     Member foundMem = gymApi.searchMembersByEmail(emailSearch);
-                    //if memSearch is not null the addAssessment() method will be run
+                    //if memSearch is not null the toString() method will be run
                     if( foundMem != null){
                         System.out.println(foundMem.toString());
                         System.out.println(returnToMenu);
@@ -334,7 +334,7 @@ public class MenuController
                     String nameSearch = validNextString("Name: ");
                     //email is searched for and if a member object is found it is stored in the foundMem variable
                     String foundName = gymApi.searchMembersByName(nameSearch);
-                    //if memSearch is not null the addAssessment() method will be run
+                    //if memSearch is not null the toString() method will be run
                     if(!foundName.equals("")){
                         System.out.println(foundName);
                         validNextString("Press Enter to return..");
@@ -620,7 +620,7 @@ public class MenuController
         String comment = validNextString("\nTrainer's Comment:\n> ");
 
         //new assessment is added to the member object with the above variables
-        currMember.addAssessment(new Assessment(weight, chest, thigh, upperArm, waist, hips, comment, currTrainer));
+        currMember.getAssessments().put(new Date(), new Assessment(weight, chest, thigh, upperArm, waist, hips, comment, currTrainer));
         //This is just checking if the comment from the latest assessment matches the one the user input
         //If this is true then we know the assessment comment was updated successfully
         if(currMember.latestAssessment().getComment().equals(comment)){
